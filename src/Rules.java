@@ -2,15 +2,15 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 public class Rules{
-  Stone current = new Stone();
+  Piece current = new Piece();
   /*final static int BLACK = 1;
   final static int WHITE = 2;
   final static int EMPTY = 0;
   final static int OFFBOARD = -1;*/
   int playerId;
   int stonesId;
-  Arraylist<Stone> stonesToBeSwapped = new ArrayList<>();
-  Arraylist<Stone> possiblePos = new ArrayList<>();
+  ArrayList<Piece> stonesToBeSwapped = new ArrayList<>();
+  ArrayList<Piece> possiblePos = new ArrayList<>();
   boolean valid;
 
 
