@@ -13,6 +13,9 @@ public class Board {
         board[4][3].changeColour(1);
         board[4][4].changeColour(2);
     }
+    public Piece[][] getBoard (){
+        return board;
+    }
     public  void print (){
         for(int i = 0; i < board.length; i++){
             for(int j = 0; j < board[0].length; j++){
