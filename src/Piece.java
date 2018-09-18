@@ -15,5 +15,8 @@ public class Piece {
     public int getColour (){
         return colour;
     }
-
+    public void flip(){
+        if(colour == 1) colour =2;
+        else if(colour == 2) colour =1;
+    }
 }
