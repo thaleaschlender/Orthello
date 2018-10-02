@@ -26,6 +26,13 @@ public class Board {
         }
     }
     public void printScore(){
-
+        int w = 0; int b = 0;
+        for(int i = 0; i < board.length; i++){
+            for(int j = 0; j < board[0].length; j++){
+                if(board[i][j].getColour()== 1) w++;
+                if(board[i][j].getColour()== 2) b++;
+            }
+        }
+        System.out.println("white:" + w); System.out.println("Black:" + b);
     }
 }
