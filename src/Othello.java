@@ -1,18 +1,20 @@
-
-    import javafx.application.Application;
+import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Othello extends Application {
-
-        public static Board board = new Board();
-        static boolean playerID = true;
-
+        //general game information
+        private static Board board = new Board();
+        private static Player white = new Player(1);
+        private static Player black = new Player(2);
+        public static Player current = black;
+        //window frame information
         private static final int TILE_SIZE = 80;
         private static final int WIDTH = 8;
         private static final int HEIGHT = 8;
@@ -23,6 +25,8 @@ public class Othello extends Application {
         private static Tile[][] boardUi = new Tile[HEIGHT][HEIGHT];
 
         private Parent createContent() {
+            Tile.setGame(this);
+            Player.setGame(this);
             Pane root = new Pane();
             root.setPrefSize(640, 680);
             root.getChildren().addAll(tileGroup, pieceGroup);
@@ -37,78 +41,128 @@ public class Othello extends Application {
             primaryStage.setTitle("Othello");
             primaryStage.show();
             updateBoard();
+            showOptions(possibleMoves());
         }
 
-        public static boolean makeMove(int x, int y){
+        public boolean makeMove(int x, int y){
             boolean valid = false;
-            board.getBoard()[x][y].changeColour(playerID);
-            int check;
-            if(playerID) check = 2;
-            else check =1;
-            //check array out of bounds
+            if(board.getBoard()[x][y].getColour()!=0) return false;
+            board.getBoard()[x][y].changeColour(current.getColour());
+            int check = current.getNumber();
             for(int i = x-1;i <= x+1; i++ )
                 for (int j = y - 1; j <= y + 1 ; j++) {
-                    if(i < 0 || i > 7) break;
-                    if(j < 0 || j > 7) break;
-
-                    if ((board.getBoard()[i][j].getColour() == check) && checkLine(x, y, (i - x), (j - y), check)) {
+                    if (i>-1 && i<8 && j >-1 && j<8 &&((i-x)!=0||(j-y)!=0)&&(board.getBoard()[i][j].getColour() == check) && checkLine(x, y, (i - x), (j - y), check))
                         valid = true;
-                    }
                 }
-            playerID = !playerID;
             if(!valid) {
                 board.getBoard()[x][y].changeColour(0);
-                playerID = !playerID;
                 System.out.println("INVALID");
                 return false;
             }
-            else
+            else{
+                if(current == black ) current = white;
+                else current = black;
                 System.out.println("VALID");
-            board.print(); updateBoard();
+            }
+
+            updateBoard();
             return valid;
         }
+        public int validMove(int x, int y) {
+            int valid = 0;
+            if (board.getBoard()[x][y].getColour() != 0) return 0;
+            board.getBoard()[x][y].changeColour(current.getColour());
+            int check = current.getNumber();
+            for (int i = x - 1; i <= x + 1; i++){
+                for (int j = y - 1; j <= y + 1; j++) {
+                    if (i > -1 && i < 8 && j > -1 && j < 8
+                            && ((i - x) != 0 || (j - y) != 0) &&
+                            (board.getBoard()[i][j].getColour() == check) && checkLineWithoutFlip(x, y, (i - x), (j - y), check).size() != 0) {
+                        valid += checkLineWithoutFlip(x, y, (i - x), (j - y), check).size();
+
+                    }
+                }
+            }
+            if(valid != 0) System.out.println("x: " + x + " y: " + y + "with flippables = " + valid);
+            board.getBoard()[x][y].changeColour(0);
+            return valid;
+        }
+    public ArrayList<Piece> possibleMoves(){
+            ArrayList<Piece> possibleMoves = new ArrayList<Piece>();
+            for(int i =0; i < board.getBoard().length;i++){
+                for(int j=0; j < board.getBoard()[i].length;j++){
+                    if(validMove(i,j)>0){
+                        possibleMoves.add(board.getBoard()[i][j]);
+                        System.out.println("board: x. "+i+" y. "+j+" added to possibilities");
+                    }
+                }
+            }
+             //updateBoard();
+            //showOptions(possibleMoves);
+        return possibleMoves;
+    }
 
         //direction x is vertical, direction y horizontal
-        private static boolean checkLine(int x, int y, int directionX, int directionY, int check) {
-            //checks straight line
-            //potentially considering the directions as integers
-            // create Arraylist with intermediate pieces if there is a !PlayerID stone in the direection, flip them and quit method
+        private boolean checkLine(int x, int y, int directionX, int directionY, int check) {
+            System.out.println(check);
             ArrayList<Piece> tobeflipped = new ArrayList<>();
             boolean finished = false;
-            while(!finished&& x >-1 && x < 8 && y > -1 && y <8){
-                System.out.println(x +" " + y);
-                if(board.getBoard()[x+directionX][y+directionY].getColour()==check){
-
-                    tobeflipped.add(board.getBoard()[x+directionX][y+directionY]);
-                    x = x + directionX;
-                    y = y + directionY;
-                }
-                else if(board.getBoard()[x+directionX][y+directionY].getColour()== 0)
+            if(x+directionX<0|| x+directionX>7 || y+directionY< 0 || y+directionY >7) return false;
+            while(!finished){
+                if (x+directionX<0 || x+directionX>7 || y+directionY< 0 || y+directionY >7) return false;
+                else{x = x + directionX;
+                y = y + directionY;
+                if(board.getBoard()[x][y].getColour()==check)
+                    tobeflipped.add(board.getBoard()[x][y]);
+                else if(board.getBoard()[x][y].getColour()== 0)
                     return false;
-                else finished = true;
-            }
-            flip(tobeflipped);
 
-            System.out.println("CHECK " + x + " " + y + "with direction " + directionX + " " + directionY);
+                else finished = true;
+            }}
+            flip(tobeflipped);
             return true;
         }
+    private ArrayList<Piece> checkLineWithoutFlip(int x, int y, int directionX, int directionY, int check) {
+        ArrayList<Piece> flippable = new ArrayList<>();
+        boolean finished = false;
+        if(x+directionX<0 || x+directionX>7 || y+directionY< 0 || y+directionY >7) return new ArrayList<>();
+        while(!finished&& x+directionX>-1 && x+directionX< 8 && y+directionY> -1 && y+directionY <8){
+            if(x+directionX<0 || x+directionX>7 || y+directionY< 0 || y+directionY >7) return new ArrayList<>();
+            else{
+                x = x + directionX;
+                y = y + directionY;
+                if(board.getBoard()[x][y].getColour()== 0) return new ArrayList<>();
+                else if(board.getBoard()[x][y].getColour()==check) flippable.add(board.getBoard()[x][y]);
+                else if(board.getBoard()[x][y].getColour()!=check){
+                finished = true;}
+                else
 
-        private static void flip (ArrayList<Piece> pieces){
+                    return new ArrayList<>();
+
+        }}
+        return flippable;
+    }
+
+        private void flip (ArrayList<Piece> pieces){
             for(int i = 0; i < pieces.size();i++){
                 pieces.get(i).flip();
             }
         }
-
-        public static void updateBoard(){
+    public void showOptions(ArrayList<Piece> options){
+            for(int i = 0; i < options.size(); i++)
+                boardUi[options.get(i).getX()][options.get(i).getY()].drawYellow();
+    }
+    public void updateBoard(){
             for (int x = 0; x < WIDTH; x++) {
                 for (int y = 0; y < HEIGHT; y++) {
+                    boardUi[x][y].removeCircle();
                     if(board.getBoard()[x][y].getColour() == 1) boardUi[x][y].drawWhite();
                     else if(board.getBoard()[x][y].getColour() == 2) boardUi[x][y].drawBlack();
                 }
             }
         }
 
-        private static void fillBoard (){
+        private void fillBoard (){
             for (int x = 0; x < WIDTH; x++){
                 for (int y = 0; y < HEIGHT; y++){
                     Tile tile = new Tile();
@@ -120,6 +174,9 @@ public class Othello extends Application {
             }
         }
         public static void main(String[] args) {launch(args); }
-    }
+
+
+        }
+
 
 
