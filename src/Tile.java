@@ -23,7 +23,9 @@ import javafx.scene.shape.Rectangle;
             setOnMouseClicked(event -> {
                 if (event.getButton() == MouseButton.PRIMARY){
                     int x = (int)getTranslateY()/tileSize; int y = (int)getTranslateX()/tileSize;
-                   // if(game.current.getColour() == 1)
+                    
+                    if(game.current.getColour() == 1)
+
 
                    if(game.makeMove(x,y)){
                    // else{
