@@ -1,5 +1,4 @@
 
-import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.StackPane;
@@ -19,24 +18,11 @@ import javafx.scene.shape.Rectangle;
 
             setAlignment(Pos.CENTER);
             getChildren().addAll(border, circle);
-
             setOnMouseClicked(event -> {
                 if (event.getButton() == MouseButton.PRIMARY){
                     int x = (int)getTranslateY()/tileSize; int y = (int)getTranslateX()/tileSize;
-                    
-                    if(game.current.getColour() == 1)
-
-
-                   if(game.makeMove(x,y)){
-                   // else{
-                        //game.current.mostFlippedPlayer();
-
-
-                   // }*/
-                   //game.current.randomPlayer();
-                    game.updateBoard();
-                    game.showOptions(game.possibleMoves());}
-                }
+                    game.current.play(x,y);
+                    }
             });
         }
 
