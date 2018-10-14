@@ -1,3 +1,4 @@
+
 public class Board {
     Piece[][] board;
 
@@ -20,7 +21,7 @@ public class Board {
                 board[i][j] = new Piece(0, i, j);
                 board[i][j].changeColour(b.getBoard()[i][j].getColour());
             }
-    }
+        }
 
     }
     public Piece[][] getBoard (){
@@ -35,7 +36,7 @@ public class Board {
             System.out.println();
         }
     }
-    public void printScore(){
+    public int printScore(int p){
         int w = 0; int b = 0;
         for(int i = 0; i < board.length; i++){
             for(int j = 0; j < board[0].length; j++){
@@ -43,6 +44,8 @@ public class Board {
                 if(board[i][j].getColour()== 2) b++;
             }
         }
-        System.out.println("white:" + w); System.out.println("Black:" + b);
+        //System.out.println("white:" + w); System.out.println("Black:" + b);
+        if(p == 1) return w;
+        else  return b;
     }
 }
