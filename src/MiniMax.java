@@ -74,7 +74,7 @@ public class MiniMax extends Player{
                         for(Piece f: flip) f.flip();
                     }
 
-            }}
+                }}
         return board;
     }
     private int validMove(int x, int y, Board board, int current) {
