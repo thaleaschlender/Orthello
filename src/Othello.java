@@ -17,11 +17,11 @@ import java.util.ArrayList;
 public class Othello extends Application {
     //general game information
     public static Board board = new Board();
-    private static Player white = new Player(1);
+    private static Player white = new GreedyAlgorithm(1);
     private static Player black = new Player(2);
     public static Player current = black;
     //window frame information
-    private static final int TILE_SIZE = 80;
+    private static final int TILE_SIZE = 60;
     private static final int WIDTH = 8;
     private static final int HEIGHT = 8;
 
@@ -43,7 +43,7 @@ public class Othello extends Application {
         Tile.setGame(this);
         Player.setGame(this);
         BorderPane root = new BorderPane();
-        root.setPrefSize(640, 680);
+        root.setPrefSize(480, 500);
         root.getChildren().addAll(tileGroup, pieceGroup);
         root.setBottom(hbox);
         root.setStyle("-fx-background-color: #A9A9A9;;");
@@ -79,13 +79,13 @@ public class Othello extends Application {
 
         Label lable1= new Label("Player: " + playerID);
         lable1.setTextFill(Color.BLACK);
-        lable1.setFont(Font.font("Verdans", FontWeight.BOLD, 20));
+        lable1.setFont(Font.font("Verdans", FontWeight.BOLD, 15));
         Label lable2= new Label("Score: " + board.printScore(1));
         lable2.setTextFill(Color.WHITE);
-        lable2.setFont(Font.font("Verdans",FontWeight.BOLD, 20));
+        lable2.setFont(Font.font("Verdans",FontWeight.BOLD, 15));
         Label lable3= new Label("Score: " + board.printScore(2));
         lable3.setTextFill(Color.BLACK);
-        lable3.setFont(Font.font("Verdans", FontWeight.BOLD, 20));
+        lable3.setFont(Font.font("Verdans", FontWeight.BOLD, 15));
         //Button button1 = new Button("Restart");
 
         hbox.getChildren().addAll(lable1, lable2, lable3);

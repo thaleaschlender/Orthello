@@ -8,7 +8,7 @@ import javafx.scene.shape.Rectangle;
 public class Tile extends StackPane {
     static Othello game;
     private Circle circle = new Circle();
-    private static int tileSize = 80;
+    private static int tileSize = 60;
 
     public Tile(){
         Rectangle border = new Rectangle(tileSize, tileSize);
@@ -26,16 +26,16 @@ public class Tile extends StackPane {
     }
 
     public void drawWhite(){
-        circle.setRadius(30.00);
+        circle.setRadius(20.00);
         circle.setFill(Color.WHITE);
     }
 
     public void drawBlack(){
-        circle.setRadius(30.00);
+        circle.setRadius(20.00);
         circle.setFill(Color.BLACK);
     }
     public void drawYellow(){
-        circle.setRadius(15.00);
+        circle.setRadius(10.00);
         circle.setFill(Color.YELLOW);
     }
     public void removeCircle(){

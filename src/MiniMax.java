@@ -10,6 +10,7 @@ public class MiniMax extends Player{
         game.updateBoard();
     }
     private Piece minimax (Board board, int depth, int max_depth, Piece piece, int current) {
+        //current is black or white, what we check
         Piece chosen_move = piece;
         int chosen_score;
         if (depth == max_depth) {
@@ -157,6 +158,6 @@ public class MiniMax extends Player{
         if(board.getBoard()[6][6].getColour()==2) evaluation -= 100;
 
         return evaluation;
-        //Assuming the aim of black is to have the biggest ratio?
+        //Assuming the aim of white is to have the biggest ratio?
     }
 }
