@@ -22,12 +22,15 @@ public class TreeSearch extends Player{
         Node bestNode = null;
         ArrayList<Node> fringe = new ArrayList<>();
         fringe.add(new Node(board, null, null)); // root or initial state
-        fringe.get(0).setPlayer(initPlayer);//assuming black starts i.e. is the root
+        //System.out.println("PLaya " + initPlayer);
+        fringe.get(0).setPlayer(2);//assuming black starts i.e. is the root
         while(fringe.size() > 0){
             Node current = fringe.remove(0);
             if(current.getDepth() != depthLimit) fringe.addAll(expand(current));
             else bestNode = compare(bestNode, current);
         }
+        System.out.println("done " + bestNode.getFirstPiece().getX() + " "
+        + bestNode.getFirstPiece().getY());
         return bestNode;
     }
     //compare will be different for minimax etc?
@@ -35,7 +38,7 @@ public class TreeSearch extends Player{
     public Node compare (Node node1, Node node2){
         Node result;
         if(node1 == null) result = node2;
-
+        else if (node2 == null) result = node1;
         else if (node1.getCost() < node2.getCost()) result = node2;
         else if (node1.getCost() > node2.getCost()) result = node1;
         else{

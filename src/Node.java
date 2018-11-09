@@ -8,28 +8,39 @@ public class Node {
     public ArrayList<Piece> possibilities;
     public int currentPlayer;
     public int cost;
-    private ArrayList<Piece> actions;
+    private ArrayList<Piece> actions = new ArrayList<>();
 
     public Node(Board state , Node parent, Piece p){
         board = state;
         this.parent = parent;
         if(parent == null){
             this.depth =1;
-            this.actions = new ArrayList<>();
-            actions.add(p);
         }
-        else{ this.depth = parent.getDepth() +1;
-        this.actions = this.parent.actions;
+        else{
+            this.depth = parent.getDepth() +1;
+        this.actions.addAll(this.parent.getActions());
         this.actions.add(p);
         if(parent.getPlayer()== 1)this.currentPlayer =2;
         else this.currentPlayer =1;}
         cost = evaluateBoard();
+        for(int i = 0; i < actions.size(); i++){
+            System.out.println("action number " + i + " with "
+                    + actions.get(i).getX() + " " + actions.get(i).getY());
+        }
+        //System.out.println("depth " + depth);
+        //System.out.println("actions size " + actions.size());
     }
+
+    public ArrayList<Piece> getActions() {
+        return actions;
+    }
+
     public int getCost(){
         return cost;
     }
     public Piece getFirstPiece(){
-        return actions.get(1);
+
+        return actions.get(0);
     }
     public void setPlayer(int p){
         this.currentPlayer = p;

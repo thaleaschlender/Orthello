@@ -98,6 +98,7 @@ public class Othello extends Application {
     public boolean makeMove(int x, int y) {
         boolean valid = false;
         ArrayList<Piece> flips;
+        System.out.println("x" + x + " y " + y);
         if(board.getBoard()[x][y].getColour()!=0) return false;
         board.getBoard()[x][y].changeColour(current.getColour());
         int check = current.getNumber();
@@ -105,13 +106,16 @@ public class Othello extends Application {
             for (int j = y - 1; j <= y + 1 ; j++) {
                 if (i>-1 && i<8 && j >-1 && j<8 &&((i-x)!=0||(j-y)!=0)&&(board.getBoard()[i][j].getColour() == check)) {
                     flips = checkLine(x, y, (i - x), (j - y), check);
+
                     if (flips.size() != 0) {
                         valid = true;
                         for(Piece f: flips) f.flip();
+                        System.out.println("hello");
                     }
                 }
             }
         if(!valid) {
+            System.out.println("invalid");
             board.getBoard()[x][y].changeColour(0);
             return false;
         }
