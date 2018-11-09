@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class Player {
-    private int colour;
+    public int colour;
     protected int checkfor;
     protected static Othello game;
     public static void setGame(Othello g){

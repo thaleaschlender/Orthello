@@ -154,6 +154,7 @@ public class MiniMax extends Player{
         if(board.getBoard()[1][7].getColour()==2) evaluation -= 100;
 
         if(board.getBoard()[7][6].getColour()==2) evaluation -= 100;
+
         if(board.getBoard()[6][7].getColour()==2) evaluation -= 100;
         if(board.getBoard()[6][6].getColour()==2) evaluation -= 100;
 
