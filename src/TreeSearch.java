@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 
 public class TreeSearch extends Player{
+    Board initboard;
     public TreeSearch(int c){
         super(c);
     }
@@ -11,9 +12,12 @@ public class TreeSearch extends Player{
      */
     @Override
     public void play (int x, int y){
-        Board board = new Board(game.board);
-        Piece piece = treeSearch(board,5,colour).getFirstPiece();
-        System.out.println(piece.getX() + " and " + piece.getY());
+        initboard = new Board(game.board);
+        Node node = treeSearch(initboard,4,colour);
+        Piece piece;
+        if(node == null) piece = randomGreedyMove(game.board,2);
+        else piece = node.getFirstPiece();
+        //System.out.println(piece.getX() + " and " + piece.getY());
         game.makeMove(piece.getX(),piece.getY());
         game.updateBoard();
     }
@@ -22,17 +26,27 @@ public class TreeSearch extends Player{
         Node bestNode = null;
         ArrayList<Node> fringe = new ArrayList<>();
         fringe.add(new Node(board, null, null)); // root or initial state
-        //System.out.println("PLaya " + initPlayer);
         fringe.get(0).setPlayer(2);//assuming black starts i.e. is the root
-        while(fringe.size() > 0){
+        //Node bestNode = fringe.get(0);
+        while(fringe.size() > 0) {
             Node current = fringe.remove(0);
-            if(current.getDepth() != depthLimit) fringe.addAll(expand(current));
-            else bestNode = compare(bestNode, current);
+
+            if (current.getDepth() != depthLimit) fringe.addAll(expand(current));
+            else {
+                bestNode = compare(bestNode, current);
+            }
+            System.out.println("Depth " + current.getDepth());
+            System.out.println("fringe size" + fringe.size());
         }
-        System.out.println("done " + bestNode.getFirstPiece().getX() + " "
-        + bestNode.getFirstPiece().getY());
-        return bestNode;
+        if(depthLimit == 1) {
+            System.out.println("All nodes apparently result in an inevitable loss from a team");
+            return null;}
+        else if(bestNode == null) {
+            return treeSearch(initboard,depthLimit-1,colour);
+        }
+        else return bestNode;
     }
+    //if depth limit cant be reached,
     //compare will be different for minimax etc?
 
     public Node compare (Node node1, Node node2){
@@ -49,6 +63,14 @@ public class TreeSearch extends Player{
         return result;
     }
 
+    public Piece randomGreedyMove(Board board, int player){
+        ArrayList<Piece> validMoves = possibleMoves(board,player);
+       // for(Piece p : validMoves) System.out.println("possibile x: " + p.getX() + " y: " + p.getY());
+        int n  = (int) (Math.random()* validMoves.size());
+        System.out.println("INEVITABLE LOSS with choice n = " +n);
+        if(validMoves.size()== 0 ) System.out.println("game over");
+        return validMoves.get(n);
+    }
 
 
     public ArrayList<Node> expand (Node node){

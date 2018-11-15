@@ -110,7 +110,6 @@ public class Othello extends Application {
                     if (flips.size() != 0) {
                         valid = true;
                         for(Piece f: flips) f.flip();
-                        System.out.println("hello");
                     }
                 }
             }

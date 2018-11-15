@@ -15,6 +15,7 @@ public class Node {
         this.parent = parent;
         if(parent == null){
             this.depth =1;
+            if(p != null) this.actions.add(p);
         }
         else{
             this.depth = parent.getDepth() +1;
@@ -23,12 +24,6 @@ public class Node {
         if(parent.getPlayer()== 1)this.currentPlayer =2;
         else this.currentPlayer =1;}
         cost = evaluateBoard();
-        for(int i = 0; i < actions.size(); i++){
-            System.out.println("action number " + i + " with "
-                    + actions.get(i).getX() + " " + actions.get(i).getY());
-        }
-        //System.out.println("depth " + depth);
-        //System.out.println("actions size " + actions.size());
     }
 
     public ArrayList<Piece> getActions() {
@@ -39,9 +34,13 @@ public class Node {
         return cost;
     }
     public Piece getFirstPiece(){
-
         return actions.get(0);
     }
+
+    public ArrayList<Piece> getactions() {
+        return actions;
+    }
+
     public void setPlayer(int p){
         this.currentPlayer = p;
     }
