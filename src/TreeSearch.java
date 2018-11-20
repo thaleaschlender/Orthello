@@ -1,55 +1,87 @@
 import java.util.ArrayList;
-
+//yes, I know the class is called TreeSearch, but it is a backtracking-minimax algorithm exploring nodes of a tree
+//Fyi, i do already have a general tree search algorithm, maybe we need it later
 public class TreeSearch extends Player{
-    Board initboard;
-    public TreeSearch(int c){
-        super(c);
-    }
     /*
-    Strategy: the order we choose the next node to evaluate
-    Evaluation Function:
-
+        This is a backtracking minimax algorithm traversing through Nodes
+        It is taken from the lecture slides of reasoning techniques (I can post a picture on the whatsapp group)
+        TreeSearch extends Player
+            - it overrides the "Play" method
+            - it inherits the fields:
+                -colour (black or white),
+                -checkfor(what are we checking for according to the colour),
+                -and game ( a reference to the board, so that we can make a move on the actual board and the game can continue)
      */
+    //TODO: implement timer to replace the clicking
+    // (note: we only have the int x and int y input in play, because player was initially part of a clicklistener, we do not use this input here at all)
+    public TreeSearch(int c){
+        super(c); // calls the constructor of player
+        Node.setTreeSearch(this);
+        /*
+            I've added a static variable TreeSearch to Node, so that I can let two minimax players, play against each other.
+            This is necessary, because minimax is only optimal against an optimal player, but can be deleted once we figure the evaluation function out
+         */
+
+    }
+
     @Override
     public void play (int x, int y){
-        initboard = new Board(game.board);
-        Node node = treeSearch(initboard,4,colour);
-        Piece piece;
-        if(node == null) piece = randomGreedyMove(game.board,2);
-        else piece = node.getFirstPiece();
-        //System.out.println(piece.getX() + " and " + piece.getY());
+        // root or initial state (this is, what the board looks like before we've made our move)
+        Node initState = new Node(new Board(game.board), null, null);
+        initState.setPlayer(checkfor);
+
+        //call the minimax method with the initial state and the depth limit
+        Node node = miniMax_Value(initState,4);
+
+        //get the x and y coordinates on piece we actually want to place, and place it on the board
+        Piece piece = node.getFirstPiece();
         game.makeMove(piece.getX(),piece.getY());
         game.updateBoard();
     }
 
-    public Node treeSearch(Board board, int depthLimit, int initPlayer){
-        Node bestNode = null;
-        ArrayList<Node> fringe = new ArrayList<>();
-        fringe.add(new Node(board, null, null)); // root or initial state
-        fringe.get(0).setPlayer(2);//assuming black starts i.e. is the root
-        //Node bestNode = fringe.get(0);
-        while(fringe.size() > 0) {
-            Node current = fringe.remove(0);
+    public Node miniMax_Value(Node initialState, int depthLimit){
+        //if we are at a leaf node, return this node.
+        if(initialState.getDepth()==depthLimit) return initialState;
+        else {
+            Node bestNode = null;
 
-            if (current.getDepth() != depthLimit) fringe.addAll(expand(current));
-            else {
-                bestNode = compare(bestNode, current);
+            //expand the node (find all the possible next moves)
+            ArrayList<Node> successors = expand(initialState);
+
+            //BackTracking bit. Call this algorithm for each of the successors in order to get their minimax values
+            for(Node n : successors) n = miniMax_Value(n,depthLimit);
+
+            //if max is playing, pick the maximum minimax value of the successors
+            if(initialState.getDepth()%2==0){
+                for(Node n : successors) bestNode = compareMax(bestNode,n);
+                return bestNode;
             }
-            System.out.println("Depth " + current.getDepth());
-            System.out.println("fringe size" + fringe.size());
+            //if min is playing, pick the minimum minimax value of the successors
+            else{
+                for(Node n : successors) bestNode = compareMin(bestNode,n);
+                return bestNode;
+            }
         }
-        if(depthLimit == 1) {
-            System.out.println("All nodes apparently result in an inevitable loss from a team");
-            return null;}
-        else if(bestNode == null) {
-            return treeSearch(initboard,depthLimit-1,colour);
-        }
-        else return bestNode;
-    }
-    //if depth limit cant be reached,
-    //compare will be different for minimax etc?
 
-    public Node compare (Node node1, Node node2){
+    }
+    //simple compare methods:
+
+    //find smaller node
+    public Node compareMin (Node node1, Node node2){
+        Node result;
+        if(node1 == null) result = node2;
+        else if (node2 == null) result = node1;
+        else if (node1.getCost() < node2.getCost()) result = node1;
+        else if (node1.getCost() > node2.getCost()) result = node2;
+        else{
+            double x = Math.random();
+            if(x < 0.5) result = node2;
+            else result = node1;
+        }
+        return result;
+    }
+    //find bigger node
+    public Node compareMax (Node node1, Node node2){
         Node result;
         if(node1 == null) result = node2;
         else if (node2 == null) result = node1;
@@ -63,24 +95,22 @@ public class TreeSearch extends Player{
         return result;
     }
 
-    public Piece randomGreedyMove(Board board, int player){
-        ArrayList<Piece> validMoves = possibleMoves(board,player);
-       // for(Piece p : validMoves) System.out.println("possibile x: " + p.getX() + " y: " + p.getY());
-        int n  = (int) (Math.random()* validMoves.size());
-        System.out.println("INEVITABLE LOSS with choice n = " +n);
-        if(validMoves.size()== 0 ) System.out.println("game over");
-        return validMoves.get(n);
-    }
-
-
+    //Expand method:
+    // returns an arraylist of nodes, one for each next possible move (placement of a tile)
     public ArrayList<Node> expand (Node node){
         ArrayList<Node> expantions = new ArrayList<>();
-        ArrayList<Piece> validMoves = possibleMoves(node.board,node.getPlayer());
+        ArrayList<Piece> validMoves = possibleMoves(node.getBoard(),node.getPlayer());
         for (Piece p: validMoves) {
-            expantions.add(new Node(makeMove(p.getX(),p.getY(),node.board,node.getPlayer()),node,p));
+            expantions.add(new Node(makeMove(p.getX(),p.getY(),node.getBoard(),node.getPlayer()),node,p));
         }
         return expantions;
     }
+
+    /*
+    These are the methods from the main logic in our game.
+    Since we dont actually want to place a piece, but rather hypothetically want to test it,
+    they are here again, but return a board (rather than changing the main static game board)
+     */
     private Board makeMove(int x, int y, Board board, int current){
         ArrayList<Piece> flip;
         if(board.getBoard()[x][y].getColour()!=0) return board;
@@ -128,7 +158,6 @@ public class TreeSearch extends Player{
             }}
         return flippable;
     }
-
     private int validMove(int x, int y, Board board, int current) {
         int valid = 0;
         if (board.getBoard()[x][y].getColour() != 0) return 0;
