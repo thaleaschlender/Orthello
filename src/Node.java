@@ -1,46 +1,53 @@
 import java.util.ArrayList;
 
 public class Node {
+    private static Player t; // explained this in TreeSearch
+    /*
+    A tree node has:
+        -a parent,
+         -a depth,
+         -a cost,
+         -a currentplayer (the checkfor variable, for whoevers turn it is right now)
+         -list of actions happend sofar (pieces placed until now)
+     */
     private Node parent;
     private int depth;
-    private ArrayList<Node> children;
-    public Board board;
-    public ArrayList<Piece> possibilities;
-    public int currentPlayer;
-    public int cost;
+    private Board board;
+    private int cost;
+    private int currentPlayer;
     private ArrayList<Piece> actions = new ArrayList<>();
 
     public Node(Board state , Node parent, Piece p){
         board = state;
         this.parent = parent;
-        if(parent == null){
-            this.depth =1;
-            if(p != null) this.actions.add(p);
-        }
+        if(parent == null) this.depth =1;
         else{
             this.depth = parent.getDepth() +1;
-        this.actions.addAll(this.parent.getActions());
-        this.actions.add(p);
-        if(parent.getPlayer()== 1)this.currentPlayer =2;
-        else this.currentPlayer =1;}
+            this.actions.addAll(this.parent.getActions());
+            this.actions.add(p);
+            if(parent.getPlayer()== 1)this.currentPlayer =2;
+            else this.currentPlayer =1;
+        }
         cost = evaluateBoard();
     }
 
+
+    //getter and setter Methods
+    public static void setTreeSearch(Player tree){
+        t = tree;
+    }
     public ArrayList<Piece> getActions() {
         return actions;
     }
-
+    public Board getBoard(){
+        return board;
+    }
     public int getCost(){
         return cost;
     }
     public Piece getFirstPiece(){
         return actions.get(0);
     }
-
-    public ArrayList<Piece> getactions() {
-        return actions;
-    }
-
     public void setPlayer(int p){
         this.currentPlayer = p;
     }
@@ -50,7 +57,9 @@ public class Node {
     public int getPlayer(){
         return currentPlayer;
     }
-    public int evaluateBoard(){
+
+    //our evaluation method:)
+    private int evaluateBoard(){
         int evaluation = 0;
         int w = 0; int b = 0;
         for(int i = 0; i < board.getBoard().length; i++){
@@ -59,7 +68,9 @@ public class Node {
                 if(board.getBoard()[i][j].getColour()== 2) b++;
             }
         }
-        evaluation = (w-b);
+        if(t.checkfor ==1) evaluation = (b-w);
+        else evaluation = (w-b);
+
         if(board.getBoard()[0][0].getColour()==2) evaluation += 100;
         if(board.getBoard()[0][7].getColour()==2) evaluation += 100;
         if(board.getBoard()[7][0].getColour()==2) evaluation += 100;

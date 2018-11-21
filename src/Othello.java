@@ -13,12 +13,12 @@ import javafx.stage.Stage;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 //direction x is vertical, direction y horizontal
-//TODO Game over method
+//TODO Game over method!!!
 public class Othello extends Application {
     //general game information
     public static Board board = new Board();
     private static Player white = new TreeSearch(1);
-    private static Player black = new Player(2);
+    private static Player black = new TreeSearch(2);
     public static Player current = black;
     //window frame information
     private static final int TILE_SIZE = 60;

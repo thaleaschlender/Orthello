@@ -1,27 +1,10 @@
 import java.util.ArrayList;
-//yes, I know the class is called TreeSearch, but it is a backtracking-minimax algorithm exploring nodes of a tree
-//Fyi, i do already have a general tree search algorithm, maybe we need it later
-public class TreeSearch extends Player{
-    /*
-        This is a backtracking minimax algorithm traversing through Nodes
-        It is taken from the lecture slides of reasoning techniques (I can post a picture on the whatsapp group)
-        TreeSearch extends Player
-            - it overrides the "Play" method
-            - it inherits the fields:
-                -colour (black or white),
-                -checkfor(what are we checking for according to the colour),
-                -and game ( a reference to the board, so that we can make a move on the actual board and the game can continue)
-     */
-    //TODO: implement timer to replace the clicking
-    // (note: we only have the int x and int y input in play, because player was initially part of a clicklistener, we do not use this input here at all)
-    public TreeSearch(int c){
-        super(c); // calls the constructor of player
-        Node.setTreeSearch(this);
-        /*
-            I've added a static variable TreeSearch to Node, so that I can let two minimax players, play against each other.
-            This is necessary, because minimax is only optimal against an optimal player, but can be deleted once we figure the evaluation function out
-         */
 
+public class AlphaBeta extends Player {
+
+    public AlphaBeta (int c){
+        super(c);
+        Node.setTreeSearch(this);
     }
 
     @Override
@@ -31,17 +14,18 @@ public class TreeSearch extends Player{
         initState.setPlayer(checkfor);
 
         //call the minimax method with the initial state and the depth limit
-        Node node = miniMax_Value(initState,4);
+        Node node = alphaBetaSearch(initState,4, null, null);
 
         //get the x and y coordinates on piece we actually want to place, and place it on the board
         Piece piece = node.getFirstPiece();
         game.makeMove(piece.getX(),piece.getY());
         game.updateBoard();
     }
-
-    public Node miniMax_Value(Node initialState, int depthLimit){
+    public Node alphaBetaSearch(Node initialState, int depthLimit, Node alpha, Node beta){
         //if we are at a leaf node, return this node.
+        System.out.println("depth rn : " + initialState.getDepth());
         if(initialState.getDepth()==depthLimit) return initialState;
+        //else  if (initialState.getCutOff()) return intialState;
         else {
             Node bestNode = null;
 
@@ -49,21 +33,30 @@ public class TreeSearch extends Player{
             ArrayList<Node> successors = expand(initialState);
 
             //BackTracking bit. Call this algorithm for each of the successors in order to get their minimax values
-            for(Node n : successors) n = miniMax_Value(n,depthLimit);
+            for(Node n : successors) n = alphaBetaSearch(n,depthLimit, alpha, beta);
 
             //if max is playing, pick the maximum minimax value of the successors
             if(initialState.getDepth()%2==0){
                 for(Node n : successors) bestNode = compareMax(bestNode,n);
+                alpha = compareMax(alpha, bestNode);
+                System.out.println("alpha = " + alpha.getCost() );
+                if(beta == null ) System.out.println("beta is null");
+                if(beta != null && compareMax(alpha,beta) == alpha){ System.out.println("beta returned ");return beta;}
                 return bestNode;
             }
             //if min is playing, pick the minimum minimax value of the successors
             else{
                 for(Node n : successors) bestNode = compareMin(bestNode,n);
+                beta = compareMin(beta, bestNode);
+                System.out.println( " beta = " + beta.getCost());
+                if(alpha ==null) System.out.println("alpha is null");
+                if(alpha != null && compareMin(beta, alpha) == beta) {System.out.println("alpha returned"); return alpha;}
                 return bestNode;
             }
         }
 
     }
+    // think bout what if we need max val or min val for alpha beta respectively
     //simple compare methods:
 
     //find smaller node
@@ -71,13 +64,13 @@ public class TreeSearch extends Player{
         Node result;
         if(node1 == null) result = node2;
         else if (node2 == null) result = node1;
-        else if (node1.getCost() < node2.getCost()) result = node1;
-        else if (node1.getCost() > node2.getCost()) result = node2;
-        else{
+        else if (node1.getCost() <= node2.getCost()) result = node1;
+        else  result = node2;
+       /* else{
             double x = Math.random();
             if(x < 0.5) result = node2;
             else result = node1;
-        }
+        }*/
         return result;
     }
     //find bigger node
@@ -85,13 +78,13 @@ public class TreeSearch extends Player{
         Node result;
         if(node1 == null) result = node2;
         else if (node2 == null) result = node1;
-        else if (node1.getCost() < node2.getCost()) result = node2;
-        else if (node1.getCost() > node2.getCost()) result = node1;
-        else{
+        else if (node1.getCost() >= node2.getCost()) result = node1;
+        else  result = node2;
+       /* else{
             double x = Math.random();
             if(x < 0.5) result = node2;
             else result = node1;
-        }
+        }*/
         return result;
     }
 
@@ -180,3 +173,4 @@ public class TreeSearch extends Player{
         return valid;
     }
 }
+

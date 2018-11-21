@@ -5,6 +5,7 @@ public class MiniMax extends Player{
     }
     @Override
     public void play (int x, int y){
+
         Piece piece = minimax(game.board,0,3,null,checkfor);
         game.makeMove(piece.getX(),piece.getY());
         game.updateBoard();
