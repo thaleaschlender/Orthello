@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class Node {
-    private static TreeSearch t; // explained this in TreeSearch
+    private static Player t; // explained this in TreeSearch
     /*
     A tree node has:
         -a parent,
@@ -33,8 +33,8 @@ public class Node {
 
 
     //getter and setter Methods
-    public static void setTreeSearch(TreeSearch minimax){
-        t = minimax;
+    public static void setTreeSearch(Player tree){
+        t = tree;
     }
     public ArrayList<Piece> getActions() {
         return actions;
