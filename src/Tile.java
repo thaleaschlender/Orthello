@@ -19,11 +19,16 @@ public class Tile extends StackPane {
         getChildren().addAll(border, circle);
         setOnMouseClicked(event -> {
             if (event.getButton() == MouseButton.PRIMARY){
-                int x = (int)getTranslateY()/tileSize;
-                int y = (int)getTranslateX()/tileSize;
-                game.current.play(x,y);
-                Othello.hbox.getChildren().clear();
-                game.updateScore();
+                if(game.board.gameOver()) game.gameOverScreen();
+                else if(game.current.numberOfpossibleMoves(game.board, game.current.getColour()) == 0)
+                    game.gameOverScreen();
+                else {
+                    int x = (int) getTranslateY() / tileSize;
+                    int y = (int) getTranslateX() / tileSize;
+                    game.current.play(x, y);
+                    Othello.hbox.getChildren().clear();
+                    game.updateScore();
+                }
             }
         });
     }

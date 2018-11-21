@@ -20,7 +20,7 @@ public class Node {
     public Node(Board state , Node parent, Piece p){
         board = state;
         this.parent = parent;
-        if(parent == null) this.depth =1;
+        if(parent == null) this.depth =0; // we changed this, if the code fucks up, this is where
         else{
             this.depth = parent.getDepth() +1;
             this.actions.addAll(this.parent.getActions());
@@ -59,7 +59,7 @@ public class Node {
     }
 
     //our evaluation method:)
-    private int evaluateBoard(){
+  /*  private int evaluateBoard(){
         int evaluation = 0;
         int w = 0; int b = 0;
         for(int i = 0; i < board.getBoard().length; i++){
@@ -93,5 +93,38 @@ public class Node {
         if(board.getBoard()[6][7].getColour()==2) evaluation -= 100;
         if(board.getBoard()[6][6].getColour()==2) evaluation -= 100;
         return evaluation;
+    }*/
+    private int evaluateBoard(){
+        int player = t.getColour();
+        int opponent;
+        int evaluation = 0;
+        int dMoves = 0;
+        int dPosition = 0;
+        int dScore = 0;
+        int w1 = 1;
+        int w2 = 1;
+        int w3 = 1;
+
+        if (player == 1) opponent = 2;
+        else
+            opponent = 1;
+
+        dScore = Math.abs(board.printScore(player) - board.printScore(opponent));
+
+        if(board.getBoard()[0][0].getColour()==player) dPosition += 100;
+        if(board.getBoard()[0][7].getColour()==player) dPosition += 100;
+        if(board.getBoard()[7][0].getColour()==player) dPosition += 100;
+        if(board.getBoard()[7][7].getColour()==player) dPosition += 100;
+
+        dMoves = Math.abs(t.numberOfpossibleMoves(board, player) - t.numberOfpossibleMoves(board, opponent));
+
+        evaluation = w1*dScore + w2*dPosition + w3*dMoves;
+
+        return evaluation;
+    }
+    @Override
+    public String toString() {
+        if(this == null) return "Null";
+        else return Integer.toString(this.cost);
     }
 }

@@ -44,8 +44,14 @@ public class Board {
                 if(board[i][j].getColour()== 2) b++;
             }
         }
-        //System.out.println("white:" + w); System.out.println("Black:" + b);
         if(p == 1) return w;
         else  return b;
+    }
+    public boolean gameOver(){
+        boolean gameover = true;
+        for(int i = 0; i < board.length; i++)
+            for(int j = 0; j < board[0].length; j++)
+                if(board[i][j].getColour() != 0) gameover= false;
+        return gameover;
     }
 }

@@ -9,11 +9,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-
-import java.lang.reflect.Array;
+import javafx.scene.text.Text;
 import java.util.ArrayList;
 //direction x is vertical, direction y horizontal
-//TODO Game over method!!!
 public class Othello extends Application {
     //general game information
     public static Board board = new Board();
@@ -28,12 +26,14 @@ public class Othello extends Application {
     private static Group tileGroup = new Group();
     private static Group pieceGroup = new Group();
     public static HBox hbox = new HBox(10);
+    private static Stage stage;
 
     private static Tile[][] boardUi = new Tile[HEIGHT][WIDTH];
 
     public static void main(String[] args) {launch(args); }
     @Override
     public void start(Stage primaryStage) throws Exception {
+        stage = primaryStage;
         primaryStage.setScene(new Scene(createContent()));
         primaryStage.setTitle("Othello");
         primaryStage.show();
@@ -49,6 +49,15 @@ public class Othello extends Application {
         root.setStyle("-fx-background-color: #A9A9A9;;");
         fillBoard();
         return root;
+    }
+    public void gameOverScreen(){
+        Text text = new Text();
+        text.setText("Game Over");
+        text.setX(210);
+        text.setY(248);
+        Group gameover = new Group(text);
+        Scene gameOverScene = new Scene(gameover, 480, 500);
+        stage.setScene(gameOverScene);
     }
     private void fillBoard (){
         for (int x = 0; x < WIDTH; x++){
@@ -168,5 +177,6 @@ public class Othello extends Application {
             }}
         return tobeflipped;
     }
+
 
 }
