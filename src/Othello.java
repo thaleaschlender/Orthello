@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class Othello extends Application {
     //general game information
     public static Board board = new Board();
-    private static Player white = new TreeSearch(1);
+    private static Player white = new AlphaBeta(1);
     private static Player black = new TreeSearch(2);
     public static Player current = black;
     //window frame information
@@ -80,8 +80,6 @@ public class Othello extends Application {
                 else if(board.getBoard()[x][y].getValidity())boardUi[x][y].drawYellow();
             }
         }
-
-        //board.printScore();
     }
     public void updateScore(){
         int playerID = current.getColour();
@@ -159,7 +157,8 @@ public class Othello extends Application {
                 }
             }
         }
-        if(possibleMoves.size() == 0) System.out.println("GAME OVER");
+        if(possibleMoves.size() == 0) gameOverScreen();
+
         return possibleMoves;
     }
     private ArrayList<Piece> checkLine(int x, int y, int directionX, int directionY, int check) {

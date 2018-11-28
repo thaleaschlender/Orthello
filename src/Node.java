@@ -1,7 +1,8 @@
 import java.util.ArrayList;
 
 public class Node {
-    private static Player t; // explained this in TreeSearch
+    private static Player t; // explained this in TreeSearch // make sure we initialize this before creating evaluation function oor ese null pointer
+    private static EvaluationFunction e;
     /*
     A tree node has:
         -a parent,
@@ -17,6 +18,7 @@ public class Node {
     private int currentPlayer;
     private ArrayList<Piece> actions = new ArrayList<>();
 
+
     public Node(Board state , Node parent, Piece p){
         board = state;
         this.parent = parent;
@@ -28,14 +30,20 @@ public class Node {
             if(parent.getPlayer()== 1)this.currentPlayer =2;
             else this.currentPlayer =1;
         }
-        cost = evaluateBoard();
+        cost = e.evaluateBoard(board);
     }
 
 
     //getter and setter Methods
     public static void setTreeSearch(Player tree){
         t = tree;
+        e = new EvaluationFunction1(t);
     }
+    public static void setEvalFunction(int n){
+        if(n == 1) e = new EvaluationFunction1(t);
+       else e = new EvaluationFunction2(t);
+    }
+
     public ArrayList<Piece> getActions() {
         return actions;
     }
@@ -58,70 +66,7 @@ public class Node {
         return currentPlayer;
     }
 
-    //our evaluation method:)
-  /*  private int evaluateBoard(){
-        int evaluation = 0;
-        int w = 0; int b = 0;
-        for(int i = 0; i < board.getBoard().length; i++){
-            for(int j = 0; j < board.getBoard()[0].length; j++){
-                if(board.getBoard()[i][j].getColour()== 1) w++;
-                if(board.getBoard()[i][j].getColour()== 2) b++;
-            }
-        }
-        if(t.checkfor ==1) evaluation = (b-w);
-        else evaluation = (w-b);
 
-        if(board.getBoard()[0][0].getColour()==2) evaluation += 100;
-        if(board.getBoard()[0][7].getColour()==2) evaluation += 100;
-        if(board.getBoard()[7][0].getColour()==2) evaluation += 100;
-        if(board.getBoard()[7][7].getColour()==2) evaluation += 100;
-
-        if(board.getBoard()[0][1].getColour()==2) evaluation -= 100;
-        if(board.getBoard()[1][0].getColour()==2) evaluation -= 100;
-        if(board.getBoard()[1][1].getColour()==2) evaluation -= 100;
-
-        if(board.getBoard()[6][0].getColour()==2) evaluation -= 100;
-        if(board.getBoard()[7][1].getColour()==2) evaluation -= 100;
-        if(board.getBoard()[6][1].getColour()==2) evaluation -= 100;
-
-        if(board.getBoard()[0][6].getColour()==2) evaluation -= 100;
-        if(board.getBoard()[1][6].getColour()==2) evaluation -= 100;
-        if(board.getBoard()[1][7].getColour()==2) evaluation -= 100;
-
-        if(board.getBoard()[7][6].getColour()==2) evaluation -= 100;
-
-        if(board.getBoard()[6][7].getColour()==2) evaluation -= 100;
-        if(board.getBoard()[6][6].getColour()==2) evaluation -= 100;
-        return evaluation;
-    }*/
-    private int evaluateBoard(){
-        int player = t.getColour();
-        int opponent;
-        int evaluation = 0;
-        int dMoves = 0;
-        int dPosition = 0;
-        int dScore = 0;
-        int w1 = 1;
-        int w2 = 1;
-        int w3 = 1;
-
-        if (player == 1) opponent = 2;
-        else
-            opponent = 1;
-
-        dScore = Math.abs(board.printScore(player) - board.printScore(opponent));
-
-        if(board.getBoard()[0][0].getColour()==player) dPosition += 100;
-        if(board.getBoard()[0][7].getColour()==player) dPosition += 100;
-        if(board.getBoard()[7][0].getColour()==player) dPosition += 100;
-        if(board.getBoard()[7][7].getColour()==player) dPosition += 100;
-
-        dMoves = Math.abs(t.numberOfpossibleMoves(board, player) - t.numberOfpossibleMoves(board, opponent));
-
-        evaluation = w1*dScore + w2*dPosition + w3*dMoves;
-
-        return evaluation;
-    }
     @Override
     public String toString() {
         if(this == null) return "Null";
