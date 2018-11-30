@@ -82,8 +82,6 @@ public class Othello extends Application {
                 else if(board.getBoard()[x][y].getValidity())boardUi[x][y].drawYellow();
             }
         }
-
-        //board.printScore();
     }
     public void updateScore(){
         int playerID = current.getColour();
@@ -161,7 +159,8 @@ public class Othello extends Application {
                 }
             }
         }
-        if(possibleMoves.size() == 0) System.out.println("GAME OVER");
+        if(possibleMoves.size() == 0) gameOverScreen();
+
         return possibleMoves;
     }
     private ArrayList<Piece> checkLine(int x, int y, int directionX, int directionY, int check) {
