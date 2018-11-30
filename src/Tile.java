@@ -5,6 +5,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
+import java.util.TimerTask;
+import java.util.*;
+
 public class Tile extends StackPane {
     static Othello game;
     private Circle circle = new Circle();
@@ -32,6 +35,9 @@ public class Tile extends StackPane {
             }
         });
     }
+
+
+
 
     public void drawWhite(){
         circle.setRadius(20.00);

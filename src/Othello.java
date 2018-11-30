@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class Othello extends Application {
     //general game information
     public static Board board = new Board();
-    private static Player white = new TreeSearch(1);
+    private static Player white = new AlphaBeta(1);
     private static Player black = new TreeSearch(2);
     public static Player current = black;
     //window frame information
@@ -29,8 +29,10 @@ public class Othello extends Application {
     private static Stage stage;
 
     private static Tile[][] boardUi = new Tile[HEIGHT][WIDTH];
+    public Othello (){
 
-    public static void main(String[] args) {launch(args); }
+    }
+    //public static void main(String[] args) {launch(args); }
     @Override
     public void start(Stage primaryStage) throws Exception {
         stage = primaryStage;

@@ -24,7 +24,7 @@ public class AlphaBeta extends Player {
         game.makeMove(piece.getX(),piece.getY());
         game.updateBoard();
     }
-    public Node alphaBetaSearch(Node initialState, int depthLimit) {
+    /*public Node alphaBetaSearch(Node initialState, int depthLimit) {
         //if we are at a leaf node, return this node.
         Node result = null;
         System.out.println("depth rn : " + initialState.getDepth());
@@ -54,10 +54,11 @@ public class AlphaBeta extends Player {
             }
             //if min is playing, pick the minimum minimax value of the successors
             else {
-                for (Node n : evaluations){ bestNode = compareMin(bestNode, n);}
+                for (Node n : evaluations){ bestNode = compareMin(bestNode, n);
+                }
                 System.out.println(" beta = " + beta + " vs bestnode = " + bestNode);
                 beta = compareMin(beta, bestNode);
-                if (alpha != null && compareMin(beta, alpha) == beta) {
+                if (alpha != null && compareMin(beta, alpha) == beta){
                     System.out.println("BREAK and return beta : " + beta);
                     result = beta;}
                 else result = bestNode;}
@@ -65,7 +66,7 @@ public class AlphaBeta extends Player {
 
         System.out.println(" WE GIVE BACK " + result);
         return result;
-    }
+    }*/
     // look at which value to return in the case of a break; maybe initial state??
     //simple compare methods:
 
@@ -98,5 +99,72 @@ public class AlphaBeta extends Player {
         }
         return expantions;
     }
+    public Node alphaBetaSearch(Node initialState, int depthLimit) {
+        //if we are at a leaf node, return this node.
+        Node result = null;
+        // System.out.println("depth rn : " + initialState.getDepth());
+        if (initialState.getDepth() == depthLimit) {
+            System.out.println("LEAF");
+            return initialState;
+        }
+
+        Node bestNode = null;
+        //expand the node (find all the possible next moves)
+        ArrayList<Node> successors = expand(initialState);
+        //ArrayList<Node> evaluations = new ArrayList<>();
+        //BackTracking bit. Call this algorithm for each of the successors in order to get their minimax values
+        System.out.println("alpha = " + alpha  + " beta = " + beta);
+        //for (Node n : successors) evaluations.add(alphaBetaSearch(n, depthLimit));
+
+        //if max is playing, pick the maximum minimax value of the successors
+        if (initialState.getDepth() % 2 == 0) {
+            Node value ;
+            for (int i = 0; i < successors.size(); i++){
+                value = alphaBetaSearch(successors.get(i), depthLimit);
+                System.out.println("depth rn: max = " + initialState.getDepth());
+                bestNode = compareMax(bestNode, value);
+                alpha = compareMax(alpha, bestNode);
+                System.out.println("alpha = " + alpha + " vs bestnode = " + bestNode);
+                if (beta != null && compareMax(alpha, beta) == alpha) {
+                    System.out.println("BREAK and return alpha :" + alpha); // although we dont technically return anything here right?
+                    result = alpha;
+                    beta = null;
+                    i++;
+
+                } else {
+                    //System.out.println(" WE GIVE BACK " + bestNode);
+                    result=  bestNode;
+                }
+            }
+        }
+        //if min is playing, pick the minimum minimax value of the successors
+        else {
+            Node value;
+            for(int i = 0; i < successors.size(); i++){
+                value = alphaBetaSearch(successors.get(i), depthLimit);
+                System.out.println("depth rn: min = " + initialState.getDepth());
+                bestNode = compareMin(bestNode, value);
+                System.out.println(" beta = " + beta + " vs bestnode = " + bestNode);
+                beta = compareMin(alpha, bestNode); // this should be alpha if beta is not changed before (i.e. beta=11 still)
+                /*if (alpha != null && compareMin(bestNode, alpha) == bestNode) {
+                    System.out.println("BREAK and return beta : " + bestNode);
+                    result = bestNode;}
+                else result = beta;}*/
+                if (alpha != null && compareMin(beta, alpha) == beta) {
+                    System.out.println("BREAK and return beta : " + beta);
+                    result = beta;
+                    alpha = null;
+                    i++;
+                }
+                else result = bestNode;
+            }
+        }
+        System.out.println(" WE GIVE BACK " + result);
+        return result;
+    }
+
+    //TODO: change for each loop into normal for loop, instead of break, iterate i manually
+
+
 }
 
