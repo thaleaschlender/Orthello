@@ -1,8 +1,8 @@
 import java.util.ArrayList;
 
 public class GreedyAlgorithm extends Player {
-    public GreedyAlgorithm(int c){
-        super(c);
+    public GreedyAlgorithm(int c, boolean b){
+        super(c, b);
     }
     public void play(int x, int y){
         mostFlippedPlayer();

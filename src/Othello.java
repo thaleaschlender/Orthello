@@ -3,37 +3,52 @@ import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-
-import java.lang.reflect.Array;
+import javafx.scene.text.Text;
 import java.util.ArrayList;
+
 //direction x is vertical, direction y horizontal
-//TODO Game over method
+
 public class Othello extends Application {
+
     //general game information
     public static Board board = new Board();
-    private static Player white = new GreedyAlgorithm(1);
-    private static Player black = new Player(2);
+    private static Player white = new TreeSearch(1, true);
+    private static Player black = new TreeSearch(2, true);
     public static Player current = black;
+
     //window frame information
-    private static final int TILE_SIZE = 80;
+    private static final int TILE_SIZE = 60;
     private static final int WIDTH = 8;
     private static final int HEIGHT = 8;
-
+    public boolean gameOver = false;
     private static Group tileGroup = new Group();
     private static Group pieceGroup = new Group();
     public static HBox hbox = new HBox(10);
-
+    private static Stage stage;
     private static Tile[][] boardUi = new Tile[HEIGHT][WIDTH];
 
-    public static void main(String[] args) {launch(args); }
+    public void run(){
+        int i = 0;
+        if(!gameOver){current.play(0,0);
+        hbox.getChildren().clear();
+        updateScore();}
+        else gameOverScreen();
+        //System.out.println("Nr of It:" + ++i);
+    }
+    public static void main(String[] args) {
+        Tile.gotimer();
+        launch(args);
+    }
     @Override
     public void start(Stage primaryStage) throws Exception {
+        stage = primaryStage;
         primaryStage.setScene(new Scene(createContent()));
         primaryStage.setTitle("Othello");
         primaryStage.show();
@@ -43,12 +58,27 @@ public class Othello extends Application {
         Tile.setGame(this);
         Player.setGame(this);
         BorderPane root = new BorderPane();
-        root.setPrefSize(640, 680);
+        root.setPrefSize(480, 500);
         root.getChildren().addAll(tileGroup, pieceGroup);
         root.setBottom(hbox);
         root.setStyle("-fx-background-color: #A9A9A9;;");
         fillBoard();
         return root;
+    }
+    public void gameOverScreen(){
+        gameOver = true;
+
+        Text text = new Text();
+        text.setText("Game Over");
+        Text t = new Text();
+        t.setText("Black: " + board.printScore(1) + " " + "White: " + board.printScore(2));
+        text.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+        text.setFill(Color.BLACK); //text.setX(210);text.setY(248);
+        BorderPane root = new BorderPane();
+        root.setCenter(text);
+        root.setBottom(t);//Group gameover = new Group(text);
+        Scene gameOverScene = new Scene(root, 480, 500);
+        stage.setScene(gameOverScene);
     }
     private void fillBoard (){
         for (int x = 0; x < WIDTH; x++){
@@ -71,7 +101,6 @@ public class Othello extends Application {
                 else if(board.getBoard()[x][y].getValidity())boardUi[x][y].drawYellow();
             }
         }
-
         //board.printScore();
     }
     public void updateScore(){
@@ -79,13 +108,13 @@ public class Othello extends Application {
 
         Label lable1= new Label("Player: " + playerID);
         lable1.setTextFill(Color.BLACK);
-        lable1.setFont(Font.font("Verdans", FontWeight.BOLD, 20));
+        lable1.setFont(Font.font("Verdans", FontWeight.BOLD, 15));
         Label lable2= new Label("Score: " + board.printScore(1));
         lable2.setTextFill(Color.WHITE);
-        lable2.setFont(Font.font("Verdans",FontWeight.BOLD, 20));
+        lable2.setFont(Font.font("Verdans",FontWeight.BOLD, 15));
         Label lable3= new Label("Score: " + board.printScore(2));
         lable3.setTextFill(Color.BLACK);
-        lable3.setFont(Font.font("Verdans", FontWeight.BOLD, 20));
+        lable3.setFont(Font.font("Verdans", FontWeight.BOLD, 15));
         //Button button1 = new Button("Restart");
 
         hbox.getChildren().addAll(lable1, lable2, lable3);
@@ -98,6 +127,7 @@ public class Othello extends Application {
     public boolean makeMove(int x, int y) {
         boolean valid = false;
         ArrayList<Piece> flips;
+        System.out.println("x" + x + " y " + y);
         if(board.getBoard()[x][y].getColour()!=0) return false;
         board.getBoard()[x][y].changeColour(current.getColour());
         int check = current.getNumber();
@@ -105,6 +135,7 @@ public class Othello extends Application {
             for (int j = y - 1; j <= y + 1 ; j++) {
                 if (i>-1 && i<8 && j >-1 && j<8 &&((i-x)!=0||(j-y)!=0)&&(board.getBoard()[i][j].getColour() == check)) {
                     flips = checkLine(x, y, (i - x), (j - y), check);
+
                     if (flips.size() != 0) {
                         valid = true;
                         for(Piece f: flips) f.flip();
@@ -112,6 +143,7 @@ public class Othello extends Application {
                 }
             }
         if(!valid) {
+            System.out.println("invalid");
             board.getBoard()[x][y].changeColour(0);
             return false;
         }
@@ -147,7 +179,11 @@ public class Othello extends Application {
                 }
             }
         }
-        if(possibleMoves.size() == 0) System.out.println("GAME OVER");
+        if(possibleMoves.size() == 0){
+            //gameOverScreen();
+            System.out.println("GAME OVER");
+            gameOver = true;
+        }
         return possibleMoves;
     }
     private ArrayList<Piece> checkLine(int x, int y, int directionX, int directionY, int check) {

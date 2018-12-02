@@ -15,11 +15,11 @@ public class Board {
         board[4][4].changeColour(2);
     }
     public Board(Board b) {
-        board = new Piece[8][8];
-        for (int i = 0; i < board.length; i++){
-            for (int j = 0; j < board[0].length; j++) {
-                board[i][j] = new Piece(0, i, j);
-                board[i][j].changeColour(b.getBoard()[i][j].getColour());
+        this.board = new Piece[8][8];
+        for (int i = 0; i < this.board.length; i++){
+            for (int j = 0; j < this.board[0].length; j++) {
+                this.board[i][j] = new Piece(0, i, j);
+                this.board[i][j].changeColour(b.getBoard()[i][j].getColour());
             }
         }
 
@@ -44,8 +44,14 @@ public class Board {
                 if(board[i][j].getColour()== 2) b++;
             }
         }
-        //System.out.println("white:" + w); System.out.println("Black:" + b);
         if(p == 1) return w;
         else  return b;
+    }
+    public boolean gameOver(){
+        boolean gameover = true;
+        for(int i = 0; i < board.length; i++)
+            for(int j = 0; j < board[0].length; j++)
+                if(board[i][j].getColour() != 0) gameover= false;
+        return gameover;
     }
 }

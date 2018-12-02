@@ -1,8 +1,8 @@
 import java.util.ArrayList;
 
 public class Random extends Player {
-    public Random(int c){
-        super(c);
+    public Random(int c, boolean b){
+        super(c, b);
     }
     public void play(int x, int y){
         randomPlayer();
