@@ -28,9 +28,12 @@ public class Othello extends Application {
     public static HBox hbox = new HBox(10);
     private static Stage stage;
 
-    private static Tile[][] boardUi = new Tile[HEIGHT][WIDTH];
-    public Othello (){
+    public boolean gameover = false;
+    public int winner = 0;
 
+    private static Tile[][] boardUi = new Tile[HEIGHT][WIDTH];
+    public void run(){
+        Application.launch();
     }
     //public static void main(String[] args) {launch(args); }
     @Override
@@ -53,13 +56,16 @@ public class Othello extends Application {
         return root;
     }
     public void gameOverScreen(){
-        Text text = new Text();
+        gameover = true;
+        winner = board.getWinner();
+        System.out.println("GAME OVERRRRRRRRRRRR");
+        /*Text text = new Text();
         text.setText("Game Over");
         text.setX(210);
         text.setY(248);
         Group gameover = new Group(text);
         Scene gameOverScene = new Scene(gameover, 480, 500);
-        stage.setScene(gameOverScene);
+        stage.setScene(gameOverScene);*/
     }
     private void fillBoard (){
         for (int x = 0; x < WIDTH; x++){

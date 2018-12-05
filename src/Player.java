@@ -20,7 +20,6 @@ public class Player {
     }
 
 
-
     public void play(int x, int y){
         game.makeMove(x,y);
         game.updateBoard();

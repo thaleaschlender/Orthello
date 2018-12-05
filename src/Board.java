@@ -1,7 +1,7 @@
 
 public class Board {
     Piece[][] board;
-
+    int currentWinner = 0;
     public Board(){
         board = new Piece[8][8];
         for(int i = 0; i < board.length; i++)
@@ -35,6 +35,18 @@ public class Board {
             }
             System.out.println();
         }
+    }
+    public int getWinner(){
+        int w = 0; int b = 0;
+        for(int i = 0; i < board.length; i++){
+            for(int j = 0; j < board[0].length; j++){
+                if(board[i][j].getColour()== 1) w++;
+                if(board[i][j].getColour()== 2) b++;
+            }
+        }
+        if(w > b) return w;
+        else if ( b < w) return b;
+        else return 0;
     }
     public int printScore(int p){
         int w = 0; int b = 0;

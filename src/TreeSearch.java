@@ -31,8 +31,8 @@ public class TreeSearch extends Player{
         initState.setPlayer(checkfor);
 
         //call the minimax method with the initial state and the depth limit
-        Node node = miniMax_Value(initState,4);
-
+        Node node = miniMax_Value(initState,2);
+        System.out.println("bestnode depth " + node.getDepth());
         //get the x and y coordinates on piece we actually want to place, and place it on the board
         Piece piece = node.getFirstPiece();
         game.makeMove(piece.getX(),piece.getY());
@@ -42,6 +42,7 @@ public class TreeSearch extends Player{
     public Node miniMax_Value(Node initialState, int depthLimit){
         //if we are at a leaf node, return this node.
         if(initialState.getDepth()==depthLimit) return initialState;
+        else if(numberOfpossibleMoves(initialState.getBoard(),initialState.getPlayer()) == 0) return initialState;
         else {
             Node bestNode = null;
 
@@ -49,16 +50,20 @@ public class TreeSearch extends Player{
             ArrayList<Node> successors = expand(initialState);
 
             //BackTracking bit. Call this algorithm for each of the successors in order to get their minimax values
-            for(Node n : successors) n = miniMax_Value(n,depthLimit);
+            //for(Node n : successors) n = miniMax_Value(n,depthLimit);
 
             //if max is playing, pick the maximum minimax value of the successors
             if(initialState.getDepth()%2==0){
-                for(Node n : successors) bestNode = compareMax(bestNode,n);
+                for(Node n : successors)
+                {n = miniMax_Value(n,depthLimit);
+                bestNode = compareMax(bestNode,n);}
                 return bestNode;
             }
             //if min is playing, pick the minimum minimax value of the successors
             else{
-                for(Node n : successors) bestNode = compareMin(bestNode,n);
+                for(Node n : successors)
+                {n = miniMax_Value(n,depthLimit);
+                bestNode = compareMin(bestNode,n);}
                 return bestNode;
             }
         }

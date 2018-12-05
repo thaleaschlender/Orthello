@@ -1,8 +1,8 @@
 import java.util.ArrayList;
 
 public class AlphaBeta extends Player {
-    Node alpha;
-    Node beta;
+   // Node alpha;
+    //Node beta;
     public AlphaBeta (int c){
         super(c);
         Node.setTreeSearch(this);
@@ -13,60 +13,18 @@ public class AlphaBeta extends Player {
         // root or initial state (this is, what the board looks like before we've made our move)
         Node initState = new Node(new Board(game.board), null, null);
         initState.setPlayer(checkfor);
-        alpha = null;
-        beta = null;
+        //alpha = null;
+        //beta = null;
         //call the minimax method with the initial state and the depth limit
-        Node node = alphaBetaSearch(initState,2);
-
+       // Node node = alphaBetaSearch(initState,2);
+        Node node = alphaBeta(initState,5, null, null);
         //get the x and y coordinates on piece we actually want to place, and place it on the board
         Piece piece = node.getFirstPiece();
         System.out.println(" we took this one " + node);
         game.makeMove(piece.getX(),piece.getY());
         game.updateBoard();
     }
-    /*public Node alphaBetaSearch(Node initialState, int depthLimit) {
-        //if we are at a leaf node, return this node.
-        Node result = null;
-        System.out.println("depth rn : " + initialState.getDepth());
-        if (initialState.getDepth() == depthLimit) {
-            result = initialState;
-        }
-        else {
-            Node bestNode = null;
-            //expand the node (find all the possible next moves)
-            ArrayList<Node> successors = expand(initialState);
-            ArrayList<Node> evaluations = new ArrayList<>();
-            //BackTracking bit. Call this algorithm for each of the successors in order to get their minimax values
-            System.out.println("al = " + alpha  + " be " + beta);
-            for (Node n : successors) evaluations.add(alphaBetaSearch(n, depthLimit));
 
-            //if max is playing, pick the maximum minimax value of the successors
-            if (initialState.getDepth() % 2 == 0) {
-                for (Node n : evaluations) bestNode = compareMax(bestNode, n);
-                alpha = compareMax(alpha, bestNode);
-                System.out.println("alpha = " + alpha+ " vs bestnode = " + bestNode);
-                if (beta != null && compareMax(alpha, beta) == alpha) {
-                    System.out.println("BREAK and return alpha :" + alpha);
-                    result = alpha;
-
-                } else result = bestNode;
-
-            }
-            //if min is playing, pick the minimum minimax value of the successors
-            else {
-                for (Node n : evaluations){ bestNode = compareMin(bestNode, n);
-                }
-                System.out.println(" beta = " + beta + " vs bestnode = " + bestNode);
-                beta = compareMin(beta, bestNode);
-                if (alpha != null && compareMin(beta, alpha) == beta){
-                    System.out.println("BREAK and return beta : " + beta);
-                    result = beta;}
-                else result = bestNode;}
-            }
-
-        System.out.println(" WE GIVE BACK " + result);
-        return result;
-    }*/
     // look at which value to return in the case of a break; maybe initial state??
     //simple compare methods:
 
@@ -99,72 +57,81 @@ public class AlphaBeta extends Player {
         }
         return expantions;
     }
-    public Node alphaBetaSearch(Node initialState, int depthLimit) {
-        //if we are at a leaf node, return this node.
-        Node result = null;
-        // System.out.println("depth rn : " + initialState.getDepth());
-        if (initialState.getDepth() == depthLimit) {
-            System.out.println("LEAF");
-            return initialState;
-        }
 
-        Node bestNode = null;
-        //expand the node (find all the possible next moves)
+    public Node alphaBeta(Node initialState, int depthLimit, Node alpha, Node beta){
         ArrayList<Node> successors = expand(initialState);
-        //ArrayList<Node> evaluations = new ArrayList<>();
-        //BackTracking bit. Call this algorithm for each of the successors in order to get their minimax values
-        System.out.println("alpha = " + alpha  + " beta = " + beta);
-        //for (Node n : successors) evaluations.add(alphaBetaSearch(n, depthLimit));
-
-        //if max is playing, pick the maximum minimax value of the successors
-        if (initialState.getDepth() % 2 == 0) {
-            Node value ;
-            for (int i = 0; i < successors.size(); i++){
-                value = alphaBetaSearch(successors.get(i), depthLimit);
-                System.out.println("depth rn: max = " + initialState.getDepth());
-                bestNode = compareMax(bestNode, value);
-                alpha = compareMax(alpha, bestNode);
-                System.out.println("alpha = " + alpha + " vs bestnode = " + bestNode);
-                if (beta != null && compareMax(alpha, beta) == alpha) {
-                    System.out.println("BREAK and return alpha :" + alpha); // although we dont technically return anything here right?
-                    result = alpha;
-                    beta = null;
-                    i++;
-
-                } else {
-                    //System.out.println(" WE GIVE BACK " + bestNode);
-                    result=  bestNode;
-                }
-            }
+        Node value, bestNode = null;
+        for (int i = 0; i < successors.size(); i++) {
+            System.out.println("alpha beta call at zerooooo1oo1oo1o1oo1o1o1ooo" );
+            value = MinPlayer(successors.get(i), depthLimit, alpha, beta);
+            bestNode = compareMax(bestNode, value);
+            System.out.println("at zero the bestnode is . " + bestNode);
         }
-        //if min is playing, pick the minimum minimax value of the successors
-        else {
-            Node value;
-            for(int i = 0; i < successors.size(); i++){
-                value = alphaBetaSearch(successors.get(i), depthLimit);
-                System.out.println("depth rn: min = " + initialState.getDepth());
-                bestNode = compareMin(bestNode, value);
-                System.out.println(" beta = " + beta + " vs bestnode = " + bestNode);
-                beta = compareMin(alpha, bestNode); // this should be alpha if beta is not changed before (i.e. beta=11 still)
-                /*if (alpha != null && compareMin(bestNode, alpha) == bestNode) {
-                    System.out.println("BREAK and return beta : " + bestNode);
-                    result = bestNode;}
-                else result = beta;}*/
-                if (alpha != null && compareMin(beta, alpha) == beta) {
-                    System.out.println("BREAK and return beta : " + beta);
-                    result = beta;
-                    alpha = null;
-                    i++;
-                }
-                else result = bestNode;
-            }
-        }
-        System.out.println(" WE GIVE BACK " + result);
-        return result;
+
+        return bestNode;
+
     }
 
-    //TODO: change for each loop into normal for loop, instead of break, iterate i manually
+        public Node MinPlayer (Node initialState, int depthLimit, Node alpha, Node beta) {
+            System.out.println("MIN: depth = " + initialState.getDepth() + " alpha is " + alpha + " beta is " + beta);
+            Node result = null;
+            if(initialState.getDepth()== depthLimit) {
+                System.out.println("MIN: leaf with cost : " + initialState.getCost());
+                return initialState;
+            }
+            else if(numberOfpossibleMoves(initialState.getBoard(),initialState.getPlayer()) == 0) return initialState;
+            else {
+                Node bestNode = null;
+                ArrayList<Node> successors = expand(initialState);
+                Node value;
+                for (int i = 0; i < successors.size(); i++) {
+                    System.out.println("report back to min at depth " + initialState.getDepth());
+                    value = maxPlayer(successors.get(i), depthLimit, alpha, beta);
+                    bestNode = compareMin(bestNode, value);
+                    beta = compareMin(alpha, bestNode); // this should be alpha if beta is not changed before (i.e. beta=11 still)
+                    if (alpha != null && compareMin(beta, alpha) == beta) {
+                        result = beta;
+                        System.out.println("MIN: BREEEEEEEEEEAAAAAAAAAAK and return beta : " + beta);
+                        break;
+                    }
+                else result = bestNode;
+                }
+            }
+            System.out.println("Min at depth: "+ initialState.getDepth() + " has chosen " + result+ " (depth : " + result.getDepth());
 
+            return result;
+        }
+
+
+        public Node maxPlayer (Node initialState, int depthLimit, Node alpha, Node beta){
+            System.out.println("MAX: depth = " + initialState.getDepth() + " alpha is " + alpha + " beta is " + beta);
+            Node result = null;
+            if(initialState.getDepth()== depthLimit) {
+                System.out.println("MAX: leaf with cost : " + initialState.getCost());
+                return initialState;
+            }
+            else if(numberOfpossibleMoves(initialState.getBoard(),initialState.getPlayer()) == 0) return initialState;
+            else {
+                Node bestNode = null;
+                ArrayList<Node> successors = expand(initialState);
+                Node value;
+                for (int i = 0; i < successors.size(); i++) {
+                    System.out.println("report back to max at depth " + initialState.getDepth());
+                    value = MinPlayer(successors.get(i), depthLimit, alpha, beta);
+                    bestNode = compareMax(bestNode, value);
+                    alpha = compareMax(alpha, bestNode);
+                    if (beta != null && compareMax(alpha, beta) == alpha) {
+                        result = alpha;
+                        System.out.println("MAX: BREEEEEEEEEEEEEEAAAAAAAAAK and return alpha : " + alpha);
+                        break;
+                    }
+                    else result = bestNode;
+                }
+            }
+            System.out.println("Max at depth: "+ initialState.getDepth() + " has chosen " + result + " (depth : " + result.getDepth());
+
+            return result;
+        }
 
 }
 

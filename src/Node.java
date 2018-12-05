@@ -39,8 +39,10 @@ public class Node {
         t = tree;
         e = new EvaluationFunction1(t);
     }
+    // 1 - eval one
+    // 2 - eval two
     public static void setEvalFunction(int n){
-        if(n == 1) e = new EvaluationFunction1(t);
+        if(t.getColour() == 1) e = new EvaluationFunction1(t);
        else e = new EvaluationFunction2(t);
     }
 

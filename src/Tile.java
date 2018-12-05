@@ -23,8 +23,10 @@ public class Tile extends StackPane {
         setOnMouseClicked(event -> {
             if (event.getButton() == MouseButton.PRIMARY){
                 if(game.board.gameOver()) game.gameOverScreen();
-                else if(game.current.numberOfpossibleMoves(game.board, game.current.getColour()) == 0)
+                else if(game.current.numberOfpossibleMoves(game.board, game.current.getNumber()) == 0){
+                    System.out.println("I said its over");
                     game.gameOverScreen();
+                }
                 else {
                     int x = (int) getTranslateY() / tileSize;
                     int y = (int) getTranslateX() / tileSize;
