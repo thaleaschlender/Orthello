@@ -76,10 +76,14 @@ public class AlphaBeta extends Player {
             System.out.println("MIN: depth = " + initialState.getDepth() + " alpha is " + alpha + " beta is " + beta);
             Node result = null;
             if(initialState.getDepth()== depthLimit) {
-                System.out.println("MIN: leaf with cost : " + initialState.getCost());
+                beta = compareMin(beta,initialState);
+                System.out.println("MIN: leaf with cost : " + beta.getCost());
+                return beta;
+            }
+            else if(numberOfpossibleMoves(initialState.getBoard(),initialState.getPlayer()) == 0) {
+                System.out.println("No successors: returns init of " + initialState.getCost());
                 return initialState;
             }
-            else if(numberOfpossibleMoves(initialState.getBoard(),initialState.getPlayer()) == 0) return initialState;
             else {
                 Node bestNode = null;
                 ArrayList<Node> successors = expand(initialState);
@@ -88,7 +92,7 @@ public class AlphaBeta extends Player {
                     System.out.println("report back to min at depth " + initialState.getDepth());
                     value = maxPlayer(successors.get(i), depthLimit, alpha, beta);
                     bestNode = compareMin(bestNode, value);
-                    beta = compareMin(alpha, bestNode); // this should be alpha if beta is not changed before (i.e. beta=11 still)
+                    beta = compareMin(beta, bestNode); // this should be alpha if beta is not changed before (i.e. beta=11 still) NO WRONG WRONG WRONG
                     if (alpha != null && compareMin(beta, alpha) == beta) {
                         result = beta;
                         System.out.println("MIN: BREEEEEEEEEEAAAAAAAAAAK and return beta : " + beta);
@@ -107,10 +111,14 @@ public class AlphaBeta extends Player {
             System.out.println("MAX: depth = " + initialState.getDepth() + " alpha is " + alpha + " beta is " + beta);
             Node result = null;
             if(initialState.getDepth()== depthLimit) {
-                System.out.println("MAX: leaf with cost : " + initialState.getCost());
+                alpha = compareMax(alpha, initialState);
+                System.out.println("MAX: leaf with cost : " + alpha.getCost());
+                return alpha;
+            }
+            else if(numberOfpossibleMoves(initialState.getBoard(),initialState.getPlayer()) == 0){
+                System.out.println("No successors: returns init of " + initialState.getCost());
                 return initialState;
             }
-            else if(numberOfpossibleMoves(initialState.getBoard(),initialState.getPlayer()) == 0) return initialState;
             else {
                 Node bestNode = null;
                 ArrayList<Node> successors = expand(initialState);
@@ -122,7 +130,7 @@ public class AlphaBeta extends Player {
                     alpha = compareMax(alpha, bestNode);
                     if (beta != null && compareMax(alpha, beta) == alpha) {
                         result = alpha;
-                        System.out.println("MAX: BREEEEEEEEEEEEEEAAAAAAAAAK and return alpha : " + alpha);
+                        System.out.println("MAX: BREEEEAAAAK and return alpha : " + alpha);
                         break;
                     }
                     else result = bestNode;
