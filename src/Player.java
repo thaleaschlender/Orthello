@@ -79,8 +79,8 @@ they are here again, but return a board (rather than changing the main static ga
                 y = y + directionY;
                 if(board.getBoard()[x][y].getColour()== 0) return new ArrayList<>();
                 else if(board.getBoard()[x][y].getColour()==check) flippable.add(board.getBoard()[x][y]);
-                else if(board.getBoard()[x][y].getColour()!=check) finished = true;
-                else return new ArrayList<>();
+                //else if(board.getBoard()[x][y].getColour()!=check) finished = true;
+                else finished = true;//return new ArrayList<>();
 
             }}
         return flippable;
@@ -92,13 +92,12 @@ they are here again, but return a board (rather than changing the main static ga
         if(current == 1) colour = 2;
         else colour = 1;
         board.getBoard()[x][y].changeColour(colour);
-        int check = current;
         for (int i = x - 1; i <= x + 1; i++){
             for (int j = y - 1; j <= y + 1; j++) {
                 if (i > -1 && i < 8 && j > -1 && j < 8
                         && ((i - x) != 0 || (j - y) != 0) &&
-                        (board.getBoard()[i][j].getColour() == check) && checkLine(x, y, (i - x), (j - y), check,board).size() != 0) {
-                    valid += checkLine(x, y, (i - x), (j - y), check,board).size();
+                        (board.getBoard()[i][j].getColour() == current) && checkLine(x, y, (i - x), (j - y), current,board).size() != 0) {
+                    valid += checkLine(x, y, (i - x), (j - y), current,board).size();
 
                 }
             }
@@ -106,4 +105,5 @@ they are here again, but return a board (rather than changing the main static ga
         board.getBoard()[x][y].changeColour(0);
         return valid;
     }
+
 }

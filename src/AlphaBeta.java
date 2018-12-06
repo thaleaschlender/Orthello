@@ -17,7 +17,7 @@ public class AlphaBeta extends Player {
         //beta = null;
         //call the minimax method with the initial state and the depth limit
        // Node node = alphaBetaSearch(initState,2);
-        Node node = alphaBeta(initState,5, null, null);
+        Node node = alphaBeta(initState,4, null, null);
         //get the x and y coordinates on piece we actually want to place, and place it on the board
         Piece piece = node.getFirstPiece();
         System.out.println(" we took this one " + node);
