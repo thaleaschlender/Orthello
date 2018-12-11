@@ -6,6 +6,7 @@ public class AlphaBeta extends Player {
     public AlphaBeta (int c){
         super(c);
         Node.setTreeSearch(this);
+        Node.setEvalFunction(1);
     }
 
     @Override
