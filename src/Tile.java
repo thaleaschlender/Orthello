@@ -5,6 +5,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
+import java.util.TimerTask;
+import java.util.*;
+
 public class Tile extends StackPane {
     static Othello game;
     private Circle circle = new Circle();
@@ -20,8 +23,10 @@ public class Tile extends StackPane {
         setOnMouseClicked(event -> {
             if (event.getButton() == MouseButton.PRIMARY){
                 if(game.board.gameOver()) game.gameOverScreen();
-                else if(game.current.numberOfpossibleMoves(game.board, game.current.getColour()) == 0)
+                else if(game.current.numberOfpossibleMoves(game.board, game.current.getNumber()) == 0){
+                    System.out.println("I said its over");
                     game.gameOverScreen();
+                }
                 else {
                     int x = (int) getTranslateY() / tileSize;
                     int y = (int) getTranslateX() / tileSize;
@@ -32,6 +37,9 @@ public class Tile extends StackPane {
             }
         });
     }
+
+
+
 
     public void drawWhite(){
         circle.setRadius(20.00);
