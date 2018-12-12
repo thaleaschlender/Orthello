@@ -1,8 +1,8 @@
 import java.util.ArrayList;
 
 public class Node {
-    private static Player t; // explained this in TreeSearch // make sure we initialize this before creating evaluation function oor ese null pointer
-    private static EvaluationFunction e;
+    private Player t; // explained this in TreeSearch // make sure we initialize this before creating evaluation function oor ese null pointer
+    //private static EvaluationFunction e;
     /*
     A tree node has:
         -a parent,
@@ -22,30 +22,40 @@ public class Node {
     public Node(Board state , Node parent, Piece p){
         board = state;
         this.parent = parent;
-        if(parent == null) this.depth =0; // we changed this, if the code fucks up, this is where
+        if(parent == null) this.depth =0;
         else{
             this.depth = parent.getDepth() +1;
             this.actions.addAll(this.parent.getActions());
             this.actions.add(p);
+            this.t = parent.getT();
             if(parent.getPlayer()== 1)this.currentPlayer =2;
             else this.currentPlayer =1;
+            cost = t.getEvalFunction().evaluateBoard(board);
         }
-        cost = e.evaluateBoard(board);
+
     }
 
+    public Player getT() {
+        return t;
+    }
 
     //getter and setter Methods
-    public static void setTreeSearch(Player tree){
+    public void setTreeSearch(Player tree){
         t = tree;
-        e = new EvaluationFunction1(t);
+
+       // e = new EvaluationFunction1(t);
     }
     // 1 - eval one
     // 2 - eval two
-    public static void setEvalFunction(int n){
+    /*public static void setEvalFunction(int n){
         if(t.getColour() == 1) e = new EvaluationFunction1(t);
        else e = new EvaluationFunction2(t);
     }
 
+    public static EvaluationFunction getEval() {
+        return e;
+    }
+*/
     public ArrayList<Piece> getActions() {
         return actions;
     }

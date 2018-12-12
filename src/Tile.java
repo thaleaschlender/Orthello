@@ -22,18 +22,9 @@ public class Tile extends StackPane {
         getChildren().addAll(border, circle);
         setOnMouseClicked(event -> {
             if (event.getButton() == MouseButton.PRIMARY){
-                if(game.board.gameOver()) game.gameOverScreen();
-                else if(game.current.numberOfpossibleMoves(game.board, game.current.getNumber()) == 0){
-                    System.out.println("I said its over");
-                    game.gameOverScreen();
-                }
-                else {
                     int x = (int) getTranslateY() / tileSize;
                     int y = (int) getTranslateX() / tileSize;
-                    game.current.play(x, y);
-                    Othello.hbox.getChildren().clear();
-                    game.updateScore();
-                }
+                    game.turn(x,y);
             }
         });
     }

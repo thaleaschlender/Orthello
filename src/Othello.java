@@ -15,8 +15,8 @@ import java.util.ArrayList;
 public class Othello extends Application {
     //general game information
     public static Board board = new Board();
-    private static Player white = new AlphaBeta(1);
-    private static Player black = new GreedyAlgorithm(2);
+    public static Player white = new TreeSearch(1);
+    public static Player black = new GreedyAlgorithm(2);
     public static Player current = black;
     //window frame information
     private static final int TILE_SIZE = 60;
@@ -32,8 +32,34 @@ public class Othello extends Application {
     public int winner = 0;
 
     private static Tile[][] boardUi = new Tile[HEIGHT][WIDTH];
+
+    public int[] gameLoop(){
+        board = new Board();
+
+        while(!isGameover()){
+            current.play(0, 0);
+            hbox.getChildren().clear();
+            updateScore();
+        }
+        return board.returnScores();
+    }
+    public void turn (int x, int y){
+        if(!isGameover()){
+            current.play(x, y);
+            hbox.getChildren().clear();
+            updateScore();
+        }
+        else gameOverScreen();
+    }
+    public boolean isGameover(){
+        if(board.gameOver()) return true;
+        else if(possibleMoves().size()== 0)return true;
+        return false;
+    }
+
     public void run(){
         Application.launch();
+
     }
     //public static void main(String[] args) {launch(args); }
     @Override
@@ -113,7 +139,7 @@ public class Othello extends Application {
     public boolean makeMove(int x, int y) {
         boolean valid = false;
         ArrayList<Piece> flips;
-        System.out.println("x" + x + " y " + y);
+        //System.out.println("x" + x + " y " + y);
         if(board.getBoard()[x][y].getColour()!=0) return false;
         board.getBoard()[x][y].changeColour(current.getColour());
         int check = current.getNumber();
@@ -165,7 +191,7 @@ public class Othello extends Application {
                 }
             }
         }
-        if(possibleMoves.size() == 0) gameOverScreen();
+        //if(possibleMoves.size() == 0) gameOverScreen();
 
         return possibleMoves;
     }

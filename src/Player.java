@@ -24,6 +24,9 @@ public class Player {
         game.makeMove(x,y);
         game.updateBoard();
     }
+    public EvaluationFunction getEvalFunction(){
+        return null;
+    }
     /*
 These are the methods from the main logic in our game.
 Since we dont actually want to place a piece, but rather hypothetically want to test it,

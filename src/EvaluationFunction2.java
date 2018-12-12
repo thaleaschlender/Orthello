@@ -1,5 +1,8 @@
 public class EvaluationFunction2 implements EvaluationFunction {
     Player t;
+    int w1 = 1;
+    int w2 = 1;
+    int w3 = 1;
     public EvaluationFunction2(Player t){
        this.t = t;
     }
@@ -37,5 +40,16 @@ public class EvaluationFunction2 implements EvaluationFunction {
         if(board.getBoard()[6][7].getColour()==2) evaluation -= 100;
         if(board.getBoard()[6][6].getColour()==2) evaluation -= 100;
         return evaluation;
+    }
+    public void setW1(int w1) {
+        this.w1 = w1;
+    }
+
+    public void setW2(int w2) {
+        this.w2 = w2;
+    }
+
+    public void setW3(int w3) {
+        this.w3 = w3;
     }
 }
