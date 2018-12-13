@@ -6,7 +6,9 @@ public class EvaluationFunction1 implements EvaluationFunction {
     public EvaluationFunction1(Player t){
         this.t = t;
     }
-
+    public int getW1(){return w1;}
+    public int getW2(){return w2;}
+    public int getW3(){return w3;}
     @Override
     public int evaluateBoard(Board board) {
         int player = t.getColour();

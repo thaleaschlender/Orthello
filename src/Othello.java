@@ -34,8 +34,8 @@ public class Othello extends Application {
     private static Tile[][] boardUi = new Tile[HEIGHT][WIDTH];
 
     public int[] gameLoop(){
-        board = new Board();
-
+        //board = new Board();
+        board.clearBoard();
         while(!isGameover()){
             current.play(0, 0);
             hbox.getChildren().clear();

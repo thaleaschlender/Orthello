@@ -13,6 +13,17 @@ public class Board {
         board[4][3].changeColour(1);
         board[4][4].changeColour(2);
     }
+    public void clearBoard(){
+        board = new Piece[8][8];
+        for(int i = 0; i < board.length; i++)
+            for(int j = 0; j < board[0].length; j++)
+                board[i][j] = new Piece(0,i,j);
+
+        board[3][3].changeColour(2);
+        board[3][4].changeColour(1);
+        board[4][3].changeColour(1);
+        board[4][4].changeColour(2);
+    }
     public Board(Board b) {
         this.board = new Piece[8][8];
         for (int i = 0; i < this.board.length; i++){
