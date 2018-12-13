@@ -10,31 +10,41 @@ public class Run {
         o.run();
         //runTest();
        // System.out.println("avg winner & better eval " + (winner/numberOfRuns) );
-        int[][] weights= new int[2][3];
+        /*int[][] weights= new int[5][3];
         for(int i = 0; i < weights.length; i++)
             weights[i] = hillclimbing();
+        System.out.println("___________________________");
         for(int i = 0;i < weights.length; i++)
-            runTest(weights[i]);
+            runTest(weights[i]);*/
+        int[] weights = hillclimbing();
+        runTest(weights);
+        int[] weights2 = {1,1,1};
+        runTest(weights2);
+       /* int[] weights2 = {96,-14,-15};
+        runTest(weights2);
+        int[] weights3 = {96,-12,-8};
+        runTest(weights3);*/
 
     }
     public static void runTest(int[] weights){
             int numberOfRuns= 0;
-            int[][] results = new int[300][2];
+            int[][] results = new int[500][2];
            //Othello o = new Othello();
            //o.run();
-        o.white.getEvalFunction().setW1(weights[0]);
-        o.white.getEvalFunction().setW2(weights[1]);
-        o.white.getEvalFunction().setW3(weights[2]);
 
-           while (numberOfRuns < 300) {
+
+           while (numberOfRuns < 500) {
+               o.white.getEvalFunction().setW1(weights[0]);
+               o.white.getEvalFunction().setW2(weights[1]);
+               o.white.getEvalFunction().setW3(weights[2]);
                int[] temp = o.gameLoop();
                results[numberOfRuns][0] = temp[0];
                results[numberOfRuns][1] = temp[1];
 
                numberOfRuns++;
            }
-           int averageB = 0;
-           int averageW = 0;
+           double averageB = 0;
+           double averageW = 0;
            for(int i = 0; i < results.length; i++){
                averageB += results[i][0];
                averageW += results[i][1];
@@ -49,10 +59,11 @@ public class Run {
         int numberOfRuns= 0;
         int averageB = 0;
         int averageW = 0;
-        o.white.getEvalFunction().setW1(w[0]);
-        o.white.getEvalFunction().setW2(w[1]);
-        o.white.getEvalFunction().setW3(w[2]);
-        while (numberOfRuns < 5) {
+
+        while (numberOfRuns < 10) {
+            o.white.getEvalFunction().setW1(w[0]);
+            o.white.getEvalFunction().setW2(w[1]);
+            o.white.getEvalFunction().setW3(w[2]);
             int[] temp = o.gameLoop();
             averageB += temp[0];
             averageW += temp[1];
@@ -69,11 +80,12 @@ public class Run {
         int numberOfRuns = 0;
         int max = 100;
         int min = -50;
-       /* int a = (int)(Math.random() * ((max - min) + 1)) + min;
+      /* int a = (int)(Math.random() * ((max - min) + 1)) + min;
         int b = (int)(Math.random() * ((max - min) + 1)) + min;
         int c = (int)(Math.random() * ((max - min) + 1)) + min;
-        int[] current = {-50,60,32};*/
-       int[] current = randomproportionedweights();
+        int[] current = {a,b,c};*/
+       //int[] current = randomproportionedweights();
+        int[] current = {96,-15,-15};
         boolean unchanged = false;
 
         int[] bestScore = o.gameLoop();
@@ -108,7 +120,7 @@ public class Run {
 
     public static ArrayList<int[]> neighbours (int[] current) {
         ArrayList<int[]> neighbours = new ArrayList<>();
-        for (int i = -1; i < 2; i=i+2) {
+        for (int i = -1; i < 4; i=i+2) {
             int[] t0 = {current[0] + i, current[1], current[2]};
             int[] t1 = {current[0], current[1] + i, current[2]};
             int[] t2 = {current[0], current[1], current[2] + i};
@@ -154,7 +166,7 @@ public class Run {
         public static int[] randomproportionedweights(){
             int[] current = {-50,60,32};
             int max = 100;
-            int min = -50;
+            int min = 0;
             current [0] = (int)(Math.random() * ((max - min) + 1)) + min;
             current [1] = (int)(Math.random() * ((max - min) + 1)) + min;
             if(current[0] > current[1]){
@@ -174,7 +186,7 @@ public class Run {
                 current[2] = current[1];
                 current[1] = temp;
             }
-            int[] ordering = {-current[0], current[2], current[1]};
+            int[] ordering = {current[2], -current[0], current[2]};
 
            return ordering;
         }

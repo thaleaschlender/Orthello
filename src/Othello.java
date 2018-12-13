@@ -44,6 +44,9 @@ public class Othello extends Application {
         return board.returnScores();
     }
     public void turn (int x, int y){
+        black.getEvalFunction().setW1(96);
+        black.getEvalFunction().setW2(-14);
+        black.getEvalFunction().setW3(-15);
         if(!isGameover()){
             current.play(x, y);
             hbox.getChildren().clear();
