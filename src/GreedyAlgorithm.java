@@ -4,7 +4,7 @@ public class GreedyAlgorithm extends Player {
     EvaluationFunction e;
     public GreedyAlgorithm(int c){
         super(c);
-        e = new EvaluationFunction1(this);
+        e = new EvaluationFunction2(this);
     }
     public EvaluationFunction getEvalFunction(){
         return e;
