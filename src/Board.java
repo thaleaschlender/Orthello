@@ -13,6 +13,8 @@ public class Board {
         board[4][3].changeColour(1);
         board[4][4].changeColour(2);
     }
+
+
     public void clearBoard(){
         board = new Piece[8][8];
         for(int i = 0; i < board.length; i++)
@@ -54,8 +56,9 @@ public class Board {
                 if(board[i][j].getColour()== 2) b++;
             }
         }
-        if(w > b) return w;
-        else if ( b < w) return b;
+        if(w > b) return 1;
+        else if ( b > w) return 2;
+        else if (b == w ) return -1;
         else return 0;
     }
     public int printScore(int p){

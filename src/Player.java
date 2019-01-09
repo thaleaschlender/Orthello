@@ -32,13 +32,17 @@ These are the methods from the main logic in our game.
 Since we dont actually want to place a piece, but rather hypothetically want to test it,
 they are here again, but return a board (rather than changing the main static game board)
  */
-
+    public int switchplayer(int current){
+        if(current == 1 ) current = 2;
+        else current = 1;
+        return current;
+    }
     public Board makeMove(int x, int y, Board board, int current){
         ArrayList<Piece> flip;
         if(board.getBoard()[x][y].getColour()!=0) return board;
         int colour;
-        if(current == 1) colour = 1;
-        else colour = 2;
+        if(current == 1) colour = 2;
+        else colour = 1;
         board.getBoard()[x][y].changeColour(colour);
         int check = current;
         for(int i = x-1;i <= x+1; i++ )
@@ -108,5 +112,4 @@ they are here again, but return a board (rather than changing the main static ga
         board.getBoard()[x][y].changeColour(0);
         return valid;
     }
-    //TODO: implement game over method
 }
