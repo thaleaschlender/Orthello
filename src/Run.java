@@ -3,36 +3,42 @@
 import java.util.ArrayList;
 
 public class Run {
-    //static int[] weights;
-    //static int numberOfRuns;
+
     static Othello o = new Othello();
     public static void main (String[] args){
         o.run();
-        //runTest();
-       // System.out.println("avg winner & better eval " + (winner/numberOfRuns) );
-        /*int[][] weights= new int[5][3];
-        for(int i = 0; i < weights.length; i++)
-            weights[i] = hillclimbing();
-        System.out.println("___________________________");
-        for(int i = 0;i < weights.length; i++)
-            runTest(weights[i]);*/
+        /*
         int[] weights = hillclimbing();
         runTest(weights);
         int[] weights2 = {1,1,1};
         runTest(weights2);
-       /* int[] weights2 = {96,-14,-15};
-        runTest(weights2);
-        int[] weights3 = {96,-12,-8};
-        runTest(weights3);*/
+        */
+        runTest();
 
+    }
+    public static void runTest(){
+        int numberOfRuns= 0;
+        int[][] results = new int[300][2];
+        while (numberOfRuns < 300) {
+            int[] temp = o.gameLoop();
+            results[numberOfRuns][0] = temp[0];
+            results[numberOfRuns][1] = temp[1];
+            numberOfRuns++;
+        }
+        double averageB = 0;
+        double averageW = 0;
+        for(int i = 0; i < results.length; i++){
+            averageB += results[i][0];
+            averageW += results[i][1];
+            // System.out.println(" b " + results[i][0] + " w " + results[i][1]);
+        }
+        averageB = averageB/ results.length;
+        averageW = averageW/ results.length;
+        System.out.println(" average b " + averageB + " average w " + averageW);
     }
     public static void runTest(int[] weights){
             int numberOfRuns= 0;
             int[][] results = new int[500][2];
-           //Othello o = new Othello();
-           //o.run();
-
-
            while (numberOfRuns < 500) {
                o.white.getEvalFunction().setW1(weights[0]);
                o.white.getEvalFunction().setW2(weights[1]);

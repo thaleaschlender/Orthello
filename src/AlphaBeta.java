@@ -59,7 +59,7 @@ public class AlphaBeta extends Player {
         ArrayList<Node> expantions = new ArrayList<>();
         ArrayList<Piece> validMoves = possibleMoves(node.getBoard(),node.getPlayer());
         for (Piece p: validMoves) {
-            expantions.add(new Node(makeMove(p.getX(),p.getY(),node.getBoard(),node.getPlayer()),node,p));
+            expantions.add(new Node(makeMove(p.getX(),p.getY(),new Board(node.getBoard()),node.getPlayer()),node,p));
         }
         return expantions;
     }

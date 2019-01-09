@@ -15,8 +15,8 @@ import java.util.ArrayList;
 public class Othello extends Application {
     //general game information
     public static Board board = new Board();
-    public static Player white = new TreeSearch(1);
-    public static Player black = new GreedyAlgorithm(2);
+    public static Player white = new MontecarloAlgorithm(1);
+    public static Player black = new AlphaBeta(2);
     public static Player current = black;
     //window frame information
     private static final int TILE_SIZE = 60;
