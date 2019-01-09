@@ -1,19 +1,21 @@
 import java.util.ArrayList;
 
 public class GreedyAlgorithm extends Player {
+    EvaluationFunction e;
     public GreedyAlgorithm(int c){
         super(c);
-        Node.setTreeSearch(this);
-        Node.setEvalFunction(1);
+        e = new EvaluationFunction2(this);
     }
-
+    public EvaluationFunction getEvalFunction(){
+        return e;
+    }
     @Override
     public void play (int x, int y){
         // root or initial state (this is, what the board looks like before we've made our move)
         Node initState = new Node(new Board(game.board), null, null);
         initState.setPlayer(checkfor);
+        initState.setTreeSearch(this);
         Node node = greedyPlayer(initState);
-        System.out.println("bestnode depth " + node.getDepth());
         //get the x and y coordinates on piece we actually want to place, and place it on the board
         Piece piece = node.getFirstPiece();
         game.makeMove(piece.getX(),piece.getY());

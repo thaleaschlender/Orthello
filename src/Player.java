@@ -24,6 +24,9 @@ public class Player {
         game.makeMove(x,y);
         game.updateBoard();
     }
+    public EvaluationFunction getEvalFunction(){
+        return null;
+    }
     /*
 These are the methods from the main logic in our game.
 Since we dont actually want to place a piece, but rather hypothetically want to test it,
@@ -105,5 +108,5 @@ they are here again, but return a board (rather than changing the main static ga
         board.getBoard()[x][y].changeColour(0);
         return valid;
     }
-
+    //TODO: implement game over method
 }

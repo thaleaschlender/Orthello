@@ -1,13 +1,23 @@
 
 public class Board {
     Piece[][] board;
-    int currentWinner = 0;
+
     public Board(){
         board = new Piece[8][8];
         for(int i = 0; i < board.length; i++)
             for(int j = 0; j < board[0].length; j++)
                 board[i][j] = new Piece(0,i,j);
 
+        board[3][3].changeColour(2);
+        board[3][4].changeColour(1);
+        board[4][3].changeColour(1);
+        board[4][4].changeColour(2);
+    }
+    public void clearBoard(){
+        board = new Piece[8][8];
+        for(int i = 0; i < board.length; i++)
+            for(int j = 0; j < board[0].length; j++)
+                board[i][j] = new Piece(0,i,j);
 
         board[3][3].changeColour(2);
         board[3][4].changeColour(1);
@@ -58,6 +68,17 @@ public class Board {
         }
         if(p == 1) return w;
         else  return b;
+    }
+    public int[] returnScores (){
+        //black 0 white 1
+        int results []= {0,0};
+        for(int i = 0; i < board.length; i++){
+            for(int j = 0; j < board[0].length; j++){
+                if(board[i][j].getColour()== 1) results[1]++;
+                if(board[i][j].getColour()== 2) results[0]++;
+            }
+        }
+        return results;
     }
     public boolean gameOver(){
         boolean gameover = true;
