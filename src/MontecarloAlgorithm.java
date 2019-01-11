@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 public class MontecarloAlgorithm extends Player {
-    final int numberOfSimulations = 500;
+    final int numberOfSimulations = 400;
     int opponentscolour;
     Roxanne rox = new Roxanne(this);
     public MontecarloAlgorithm (int c){
@@ -13,6 +13,7 @@ public class MontecarloAlgorithm extends Player {
     public void play (int x, int y){
         Board initBoard = new Board(game.board);
         Piece piece = montecarlo(initBoard);
+       // Piece piece = tournementPlayMonteCarlo(initBoard);
         game.makeMove(piece.getX(),piece.getY());
         game.updateBoard();
     }
@@ -31,18 +32,23 @@ that such a move is the best in this situation.
         ArrayList<Piece> possMoves = possibleMoves(initBoard, switchplayer(colour));
         int numberOfSim = numberOfSimulations/possMoves.size();
         Piece best = null;
-        int bestScore = 0;
-        for (Piece p:possMoves) {
-            int effectiveness = 0;
-            for (int i = 0; i < numberOfSim; i++){
-                if(randomSimulation(initBoard,p) == colour) effectiveness++;
+        double bestScore = 0;
+
+            for (Piece p:possMoves) {
+                double effectiveness = 0;
+                for (int i = 0; i < numberOfSim; i++){
+                    if(randomSimulation(initBoard,p) == colour) effectiveness++;
+                }
+                //System.out.println("ef " + effectiveness + " sim no " + numberOfSim);
+                effectiveness = (effectiveness/numberOfSim);
+                //System.out.println("total ef " + effectiveness);
+                if( effectiveness >= bestScore){
+                    best = p;
+                    bestScore = effectiveness;
+                }
+                //numberOfSim += 5;
             }
-            if( effectiveness >= bestScore){
-                best = p;
-                bestScore = effectiveness;
-            }
-            //numberOfSim ++;
-        }
+
         return best;
     }
     public ArrayList<Piece> preProcess(ArrayList<Piece> possibleMoves){
@@ -89,7 +95,36 @@ move.
         else if(possibleMoves(board, current).size()== 0)return true;
         return false;
     }
+
+
+
+    public Piece tournementPlayMonteCarlo (Board initBoard){
+
+        ArrayList<Piece> possMoves = possibleMoves(initBoard, switchplayer(colour));
+        int numberOfSim = numberOfSimulations/possMoves.size();
+        Piece worst = null;
+        double worstScore = 1;
+        while(possMoves.size() != 1) {
+            for (Piece p : possMoves) {
+                double effectiveness = 0;
+                for (int i = 0; i < numberOfSim; i++) {
+                    if (randomSimulation(initBoard, p) == colour) effectiveness++;
+                }
+                //System.out.println("ef " + effectiveness + " sim no " + numberOfSim);
+                effectiveness = effectiveness / numberOfSim;
+                //System.out.println("total ef " + effectiveness);
+                if (effectiveness <= worstScore) {
+                    worst = p;
+                    worstScore = effectiveness;
+                }
+            }
+            possMoves.remove(worst);
+            worstScore = 1;
+            worst = null;
+        }
+        return possMoves.get(0);
     }
+}
 
 
 

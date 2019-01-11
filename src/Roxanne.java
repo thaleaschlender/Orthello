@@ -81,16 +81,16 @@ public class Roxanne implements EvaluationFunction {
                 //System.out.print(board.getBoard()[i][j].getColour());
                 if(board.getBoard()[i][j].getColour()== colour){
                     evaluation += boardValues[i][j];
-                    System.out.println("at " + i + " " + j + " we add " +  boardValues[i][j]);
+                   // System.out.println("at " + i + " " + j + " we add " +  boardValues[i][j]);
                 }
                 else if(board.getBoard()[i][j].getColour() == opponent) {
                     evaluation -= boardValues[i][j];
-                    System.out.println("at " + i + " " + j + " we subtract " +  boardValues[i][j]);
+                   // System.out.println("at " + i + " " + j + " we subtract " +  boardValues[i][j]);
                 }
             }
             //System.out.println();
         }
-        System.out.println("Evaluation : " + evaluation);
+       // System.out.println("Evaluation : " + evaluation);
         return evaluation;
     }
     @Override

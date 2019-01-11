@@ -3,8 +3,61 @@ public class EvaluationFunction1 implements EvaluationFunction {
     int w1 = 1;
     int w2 = 1;
     int w3 = 1;
-    public EvaluationFunction1(Player t){
+    int[][] boardValues;
+    public EvaluationFunction1(Player t)
+    {
         this.t = t;
+        boardValues = new int[8][8];
+        // corners
+        boardValues[0][0] = 5;
+        boardValues[0][7] = 5;
+        boardValues[7][0] = 5;
+        boardValues[7][7] = 5;
+
+        // around the corners
+        boardValues[1][0] = 1;
+        boardValues[0][1] = 1;
+        boardValues[1][1] = 1;
+
+        boardValues[7][1] = 1;
+        boardValues[6][1] = 1;
+        boardValues[6][0] = 1;
+
+        boardValues[1][7] = 1;
+        boardValues[1][6] = 1;
+        boardValues[0][6] = 1;
+
+        boardValues[7][6] = 1;
+        boardValues[6][7] = 1;
+        boardValues[6][6] = 1;
+
+        //outer edges
+        for(int i = 2; i < 6; i++){
+            boardValues[i][0] = 3;
+            boardValues[i][7] = 3;
+            boardValues[0][i] = 3;
+            boardValues[7][i] = 3;
+        }
+
+        // edges
+        for(int i = 2; i < 6; i++){
+            boardValues[i][1] = 2;
+            boardValues[i][6] = 2;
+            boardValues[1][i] = 2;
+            boardValues[6][i] = 2;
+        }
+        //inner circle
+        for(int i = 2; i < 6; i++){
+            boardValues[i][2] = 4;
+            boardValues[i][5] = 4;
+            boardValues[2][i] = 4;
+            boardValues[5][i] = 4;
+        }
+        boardValues[3][3] = 1;
+        boardValues[3][4] = 1;
+        boardValues[4][3] = 1;
+        boardValues[4][4] = 1;
+
     }
     public int getW1(){return w1;}
     public int getW2(){return w2;}
@@ -23,14 +76,19 @@ public class EvaluationFunction1 implements EvaluationFunction {
         else
             opponent = 1;
 
-        dScore = Math.abs(board.printScore(player) - board.printScore(opponent));
+        dScore = board.printScore(player) - board.printScore(opponent);
 
-        if(board.getBoard()[0][0].getColour()==player) dPosition += 100;
-        if(board.getBoard()[0][7].getColour()==player) dPosition += 100;
-        if(board.getBoard()[7][0].getColour()==player) dPosition += 100;
-        if(board.getBoard()[7][7].getColour()==player) dPosition += 100;
-
-        dMoves = Math.abs(t.numberOfpossibleMoves(board, player) - t.numberOfpossibleMoves(board, opponent));
+        for(int i = 0; i < board.getBoard().length; i++){
+            for(int j = 0; j < board.getBoard()[0].length; j++) {
+                if (board.getBoard()[i][j].getColour() == player) {
+                    dPosition += boardValues[i][j];
+                }
+                else if (board.getBoard()[i][j].getColour() == opponent) {
+                    dPosition -= boardValues[i][j];
+                }
+            }
+        }
+        dMoves = t.numberOfpossibleMoves(board, opponent) - t.numberOfpossibleMoves(board, player);
 
         evaluation = w1*dScore + w2*dPosition + w3*dMoves;
 

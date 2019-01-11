@@ -15,8 +15,8 @@ import java.util.ArrayList;
 public class Othello extends Application {
     //general game information
     public static Board board = new Board();
-    public static Player white = new MontecarloAlgorithm(1);
-    public static Player black = new AlphaBeta(2);
+    public static Player white = new AlphaBeta(1);
+    public static Player black = new GreedyAlgorithm(2,2);
     public static Player current = black;
     //window frame information
     private static final int TILE_SIZE = 60;
@@ -44,9 +44,9 @@ public class Othello extends Application {
         return board.returnScores();
     }
     public void turn (int x, int y){
-        black.getEvalFunction().setW1(96);
-        black.getEvalFunction().setW2(-14);
-        black.getEvalFunction().setW3(-15);
+        //black.getEvalFunction().setW1(96);
+        //black.getEvalFunction().setW2(-14);
+        //black.getEvalFunction().setW3(-15);
         if(!isGameover()){
             current.play(x, y);
             hbox.getChildren().clear();
