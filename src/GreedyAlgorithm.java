@@ -2,9 +2,10 @@ import java.util.ArrayList;
 
 public class GreedyAlgorithm extends Player {
     EvaluationFunction e;
-    public GreedyAlgorithm(int c){
+    public GreedyAlgorithm(int c, int eval){
         super(c);
-        e = new EvaluationFunction2(this);
+        if(eval == 1) e = new EvaluationFunction1(this);
+        else e = new Roxanne(this);
     }
     public EvaluationFunction getEvalFunction(){
         return e;
