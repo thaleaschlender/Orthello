@@ -2,18 +2,23 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 public class MontecarloAlgorithm extends Player {
-    final int numberOfSimulations = 400;
+    final int numberOfSimulations = 200;
     int opponentscolour;
-    Roxanne rox = new Roxanne(this);
-    public MontecarloAlgorithm (int c){
+    Roxanne rox;
+    boolean tournement;
+    public MontecarloAlgorithm (int c, boolean tournement){
         super(c);
         if( c == 1)  opponentscolour = 2;
         else opponentscolour = 1;
+        rox = new Roxanne(this);
+        this.tournement = tournement;
     }
     public void play (int x, int y){
         Board initBoard = new Board(game.board);
-        Piece piece = montecarlo(initBoard);
-       // Piece piece = tournementPlayMonteCarlo(initBoard);
+        Piece piece;
+       // if(tournement) piece = tournementPlayMonteCarlo(initBoard);
+        //else
+            piece = montecarlo(initBoard);
         game.makeMove(piece.getX(),piece.getY());
         game.updateBoard();
     }
@@ -29,7 +34,9 @@ that such a move is the best in this situation.
      */
     public Piece montecarlo (Board initBoard){
 
-        ArrayList<Piece> possMoves = possibleMoves(initBoard, switchplayer(colour));
+        ArrayList<Piece> possMoves;
+        if(tournement) possMoves = preProcess(possibleMoves(initBoard, switchplayer(colour)));
+        else possMoves = possibleMoves(initBoard, switchplayer(colour));
         int numberOfSim = numberOfSimulations/possMoves.size();
         Piece best = null;
         double bestScore = 0;
@@ -52,15 +59,29 @@ that such a move is the best in this situation.
         return best;
     }
     public ArrayList<Piece> preProcess(ArrayList<Piece> possibleMoves){
-        for(int i = 0; i < possibleMoves.size()-1; i++){
-            for(int j = 0; j <possibleMoves.size()-i-1; j++) {
-                if (rox.getValue(possibleMoves.get(j).getX(), possibleMoves.get(j).getX()) > rox.getValue(possibleMoves.get(j + 1).getX(), possibleMoves.get(j + 1).getX())) {
+       // for(Piece p : possibleMoves) System.out.println(" piece x: " + p.getX() + " y: " + p.getY() + " eval " + rox.getValue(p.getX(),p.getY()));
+        boolean swapped = true;
+        while(swapped){
+            swapped = false;
+            for(int j = 0; j <possibleMoves.size()-1; j++) {
+
+                if (rox.getValue(possibleMoves.get(j).getX(), possibleMoves.get(j).getY()) > rox.getValue(possibleMoves.get(j + 1).getX(), possibleMoves.get(j + 1).getY())) {
                     Piece temp = possibleMoves.get(j);
                     possibleMoves.set(j, possibleMoves.get(j + 1));
                     possibleMoves.set(j + 1, temp);
+                    swapped = true;
+
                 }
             }
         }
+       // System.out.println("__");
+       // for(Piece p : possibleMoves) System.out.println(" piece x: " + p.getX() + " y: " + p.getY() + " eval " + rox.getValue(p.getX(),p.getY()));
+        //System.out.println(" poss size " + possibleMoves.size());
+        int delete = possibleMoves.size()/ 5; // 20%
+        for(int i = 0; i < delete; i++){
+            possibleMoves.remove(i);
+        }
+        //System.out.println(" poss size after delete " + possibleMoves.size());
         return possibleMoves;
     }
 
@@ -118,6 +139,7 @@ move.
                     worstScore = effectiveness;
                 }
             }
+            //System.out.println(" worst score " + worstScore);
             possMoves.remove(worst);
             worstScore = 1;
             worst = null;

@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 
 public class Player {
+    public int[] lastPlacedPiece = new int[2];
     public int colour;
     protected int checkfor;
     protected static Othello game;
@@ -18,8 +19,7 @@ public class Player {
     public int getColour(){
         return colour;
     }
-
-
+    public void reset(){}
     public void play(int x, int y){
         game.makeMove(x,y);
         game.updateBoard();
@@ -57,7 +57,7 @@ they are here again, but return a board (rather than changing the main static ga
         return board;
     }
     public ArrayList<Piece> possibleMoves(Board board,int current){
-        ArrayList<Piece> possibleMoves = new ArrayList<Piece>();
+        ArrayList<Piece> possibleMoves = new ArrayList<>();
         for(int i =0; i < board.getBoard().length;i++){
             for(int j=0; j < board.getBoard()[i].length;j++){
                 if(validMove(i,j,board,current)>0){

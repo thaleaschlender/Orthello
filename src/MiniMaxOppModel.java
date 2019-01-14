@@ -1,66 +1,58 @@
 import java.util.ArrayList;
-//yes, I know the class is called TreeSearch, but it is a backtracking-minimax algorithm exploring nodes of a tree
-//Fyi, i do already have a general tree search algorithm, maybe we need it later
-public class TreeSearch extends Player{
-        EvaluationFunction e;
-    // (note: we only have the int x and int y input in play, because player was initially part of a clicklistener, we do not use this input here at all)
-    public TreeSearch(int c){
-        super(c); // calls the constructor of player
+
+public class MiniMaxOppModel extends Player {
+    EvaluationFunction e;
+    OpponentModel opponentModell = new OpponentModel(colour);
+    EvaluationFunction1 opponentEval = new EvaluationFunction1(this);
+    public MiniMaxOppModel(int colour) {
+        super(colour);
         e = new EvaluationFunction1(this);
-
-
-
+    }
+    public void reset(){
+        opponentModell.reset();
     }
     public EvaluationFunction getEvalFunction(){
         return e;
     }
+    public OpponentModel getOppEvalFunction(){
+        return opponentModell;
+    }
     @Override
     public void play (int x, int y){
-        // root or initial state (this is, what the board looks like before we've made our move)
+        opponentModell.learnWeights();
         Node initState = new Node(new Board(game.board), null, null);
         initState.setPlayer(checkfor);
         initState.setTreeSearch(this);
-        //call the minimax method with the initial state and the depth limit
         Node node = miniMax_Value(initState,2);
-        //get the x and y coordinates on piece we actually want to place, and place it on the board
         Piece piece = node.getFirstPiece();
         game.makeMove(piece.getX(),piece.getY());
+        opponentModell.setLastBoard(new Board(game.board));
         game.updateBoard();
     }
 
     public Node miniMax_Value(Node initialState, int depthLimit){
-        //if we are at a leaf node, return this node.
         if(initialState.getDepth()==depthLimit) return initialState;
         else if(numberOfpossibleMoves(initialState.getBoard(),initialState.getPlayer()) == 0) return initialState;
         else {
             Node bestNode = null;
-
-            //expand the node (find all the possible next moves)
             ArrayList<Node> successors = expand(initialState);
-
-            //BackTracking bit. Call this algorithm for each of the successors in order to get their minimax values
-            //for(Node n : successors) n = miniMax_Value(n,depthLimit);
-
-            //if max is playing, pick the maximum minimax value of the successors
             if(initialState.getDepth()%2==0){
                 for(Node n : successors)
                 {n = miniMax_Value(n,depthLimit);
-                bestNode = compareMax(bestNode,n);}
+                    bestNode = compareMax(bestNode,n);}
                 return bestNode;
             }
-            //if min is playing, pick the minimum minimax value of the successors
             else{
-                for(Node n : successors)
-                {n = miniMax_Value(n,depthLimit);
-                bestNode = compareMin(bestNode,n);}
+                //here opp model
+                for(Node n : successors) {
+                    n = miniMax_Value(n,depthLimit);
+                    bestNode = compareMin(bestNode,n);}
                 return bestNode;
             }
         }
 
     }
-    //simple compare methods:
 
-    //find smaller node
     public Node compareMin (Node node1, Node node2){
         Node result;
         if(node1 == null) result = node2;
@@ -74,7 +66,7 @@ public class TreeSearch extends Player{
         }
         return result;
     }
-    //find bigger node
+
     public Node compareMax (Node node1, Node node2){
         Node result;
         if(node1 == null) result = node2;
@@ -89,8 +81,6 @@ public class TreeSearch extends Player{
         return result;
     }
 
-    //Expand method:
-    // returns an arraylist of nodes, one for each next possible move (placement of a tile)
     public ArrayList<Node> expand (Node node){
         ArrayList<Node> expantions = new ArrayList<>();
         ArrayList<Piece> validMoves = possibleMoves(node.getBoard(),node.getPlayer());
@@ -99,4 +89,5 @@ public class TreeSearch extends Player{
         }
         return expantions;
     }
+
 }

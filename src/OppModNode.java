@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
-public class Node {
-    private Player t; // explained this in TreeSearch // make sure we initialize this before creating evaluation function oor ese null pointer
+public class OppModNode {
+    private MiniMaxOppModel t; // explained this in TreeSearch // make sure we initialize this before creating evaluation function oor ese null pointer
     //private static EvaluationFunction e;
     /*
     A tree node has:
@@ -11,7 +11,7 @@ public class Node {
          -a currentplayer (the checkfor variable, for whoevers turn it is right now)
          -list of actions happend sofar (pieces placed until now)
      */
-    private Node parent;
+    private OppModNode parent;
     private int depth;
     public Board board;
     private int cost;
@@ -19,43 +19,29 @@ public class Node {
     private ArrayList<Piece> actions = new ArrayList<>();
 
 
-    public Node(Board state , Node parent, Piece p){
+    public OppModNode(Board state , OppModNode parent, Piece p){
         board = state;
         this.parent = parent;
         if(parent == null) this.depth =0;
         else{
-            this.depth = parent.getDepth() +1;
+            this.depth = parent.getDepth()+1;
             this.actions.addAll(this.parent.getActions());
             this.actions.add(p);
             this.t = parent.getT();
             if(parent.getPlayer()== 1)this.currentPlayer =2;
             else this.currentPlayer =1;
-            cost = t.getEvalFunction().evaluateBoard(board);
+            if(depth % 2 == 0) cost = t.getEvalFunction().evaluateBoard(board);
+            else cost = t.getOppEvalFunction().evaluateBoard(board);
         }
 
     }
 
-    public Player getT() {
-        return t;
-    }
+
 
     //getter and setter Methods
-    public void setTreeSearch(Player tree){
+    public void setTreeSearch(MiniMaxOppModel tree){
         t = tree;
-
-       // e = new EvaluationFunction1(t);
     }
-    // 1 - eval one
-    // 2 - eval two
-    /*public static void setEvalFunction(int n){
-        if(t.getColour() == 1) e = new EvaluationFunction1(t);
-       else e = new EvaluationFunction2(t);
-    }
-
-    public static EvaluationFunction getEval() {
-        return e;
-    }
-*/
     public ArrayList<Piece> getActions() {
         return actions;
     }
@@ -77,9 +63,9 @@ public class Node {
     public int getPlayer(){
         return currentPlayer;
     }
-
-
-    @Override
+    public MiniMaxOppModel getT() {
+        return t;
+    }
     public String toString() {
         if(this == null) return "Null";
         else return Integer.toString(this.cost);

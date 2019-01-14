@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class Othello extends Application {
     //general game information
     public static Board board = new Board();
-    public static Player white = new AlphaBeta(1);
+    public static Player white = new GreedyAlgorithm(1,1); //TreeSearch(1);//new MiniMaxOppModel(1);//
     public static Player black = new GreedyAlgorithm(2,2);
     public static Player current = black;
     //window frame information
@@ -36,6 +36,11 @@ public class Othello extends Application {
     public int[] gameLoop(){
         //board = new Board();
         board.clearBoard();
+        white.reset();
+       /* black.getEvalFunction().setW1(6);
+        black.getEvalFunction().setW2(2);
+        black.getEvalFunction().setW3(3);
+        black.getEvalFunction().setW4(4);*/
         while(!isGameover()){
             current.play(0, 0);
             hbox.getChildren().clear();
@@ -44,15 +49,17 @@ public class Othello extends Application {
         return board.returnScores();
     }
     public void turn (int x, int y){
-        //black.getEvalFunction().setW1(96);
-        //black.getEvalFunction().setW2(-14);
-        //black.getEvalFunction().setW3(-15);
+
         if(!isGameover()){
             current.play(x, y);
+
             hbox.getChildren().clear();
             updateScore();
         }
-        else gameOverScreen();
+        else {
+            board.clearBoard();
+            //gameOverScreen();
+        }
     }
     public boolean isGameover(){
         if(board.gameOver()) return true;

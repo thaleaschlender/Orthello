@@ -51,7 +51,18 @@ public class EvaluationFunction2 implements EvaluationFunction {
     public void setW3(int w3) {
         this.w3 = w3;
     }
+
+    @Override
+    public void setW4(int w4) {
+
+    }
+
     public int getW1(){return w1;}
     public int getW2(){return w2;}
     public int getW3(){return w3;}
+
+    @Override
+    public int getW4() {
+        return 0;
+    }
 }
