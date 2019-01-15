@@ -1,5 +1,6 @@
 import java.util.ArrayList;
-
+//TODO: DEAL WITH THE WIN BY THE OPPONENT NOT HAVING ANY MOVES LEFT THING
+// MAYBE; IF THAT IS THE CASE; LET THE WINNER HAVE 1 AND THE LOSER 0 POINTS
 public class Run {
 
     static Othello o = new Othello();
@@ -18,8 +19,8 @@ public class Run {
     }
     public static void runTest(){
         int numberOfRuns= 0;
-        int[][] results = new int[1000][2];
-        while (numberOfRuns <1000) {
+        int[][] results = new int[10000][2];
+        while (numberOfRuns <10000) {
             int[] temp = o.gameLoop();
             results[numberOfRuns][0] = temp[0];
             results[numberOfRuns][1] = temp[1];
@@ -37,8 +38,8 @@ public class Run {
             if(results[i][0] > results [i][1]) winsBlack++;
             // System.out.println(" b " + results[i][0] + " w " + results[i][1]);
         }
-        averageB = averageB/ results.length;
-        averageW = averageW/ results.length;
+        averageB = averageB/ numberOfRuns;
+        averageW = averageW/ numberOfRuns;
         System.out.println(" average b " + averageB + " average w " + averageW);
         System.out.println(" wins black " + winsBlack +" wins white " + winsWhite +  " out of " + numberOfRuns + "runs");
     }

@@ -69,10 +69,65 @@ public class StableDisks implements EvaluationFunction {
                 && stableLine(x,y,0,1,board,initboard)
                 && stableLine(x,y,-1,1,board,initboard))
             return true;
+        else if((sorroundedByOpponent(x,y,1,1,board,initboard)|| isLineFull(x,y,1,1,initboard))
+                && (sorroundedByOpponent(x,y,1,0,board,initboard)|| isLineFull(x,y,1,0,initboard))
+                && (sorroundedByOpponent(x,y,0,1,board,initboard)|| isLineFull(x,y,0,1,initboard))
+                && (sorroundedByOpponent(x,y,-1,1,board,initboard)|| isLineFull(x,y,-1,1,initboard)))
+            return true;
         else return false;
     }
 
+    public boolean sorroundedByOpponent(int x, int y, int directionX, int directionY, boolean[][] board, Board initboard) {
+        boolean finished = false;
+        boolean result = false;
+        int initX = x, initY = y;
+        if(x+directionX<1 || x+directionX>6 || y+directionY< 1 || y+directionY >6){
+            result = true;
+            finished = true;
+        }
+        while(!finished){
+            if(x+directionX<1 || x+directionX>6 || y+directionY< 1 || y+directionY >6) {
+                result = true;
+                finished = true;
+            }
+            else{
+                x = x + directionX;
+                y = y + directionY;
+                if(!board[x][y] ||initboard.getBoard()[x][y].getColour()!= opponent){
+                    result = false;
+                    finished = true;
+                }
+            }}
+        finished=false;
+        if(!result) return false;
+        if(result) {
+            // doing the same but multiplying direction x and direction y by -1
+            directionX *= -1;
+            directionY *= -1;
+            x = initX;
+            y = initY;
+            if(x+directionX<1 || x+directionX>6 || y+directionY< 1 || y+directionY >6){
+                result = true;
+                finished = true;
+            }
+            while(!finished){
+                if(x+directionX<1 || x+directionX>6 || y+directionY< 1 || y+directionY >6) {
+                    result = true;
+                    finished = true;
+                }
+                else{
+                    x = x + directionX;
+                    y = y + directionY;
+                    if(!board[x][y] ||initboard.getBoard()[x][y].getColour()!= opponent){
+                        result = false;
+                        finished = true;
+                    }
+                }}
+        }
 
+        if(result) return true;
+        else return false;
+    }
     public boolean stableLine(int x, int y, int directionX, int directionY, boolean[][] board, Board initboard) {
         boolean result = false;
         int initX = x, initY = y;
@@ -82,7 +137,7 @@ public class StableDisks implements EvaluationFunction {
             else{
                 x = x + directionX;
                 y = y + directionY;
-                if(initboard.getBoard()[x][y].getColour() == player && board[x][y]){
+                if(board[x][y]){
                     result = true;
                 }
                 else result = false;
@@ -100,7 +155,7 @@ public class StableDisks implements EvaluationFunction {
             else {
                 x = x + directionX;
                 y = y + directionY;
-                if (initboard.getBoard()[x][y].getColour() == player &&board[x][y]) {
+                if (board[x][y]) {
                         result = true;
                 }
                 else result= false;
@@ -134,7 +189,8 @@ public class StableDisks implements EvaluationFunction {
                     finished = true;
                 }
             }}
-
+            finished=false;
+        if(!result) return false;
          if(result) {
              // doing the same but multiplying direction x and direction y by -1
              directionX *= -1;
@@ -154,7 +210,7 @@ public class StableDisks implements EvaluationFunction {
                      y = y + directionY;
                      if (board.getBoard()[x][y].getColour() == 0) {
                          result = false;
-                         finished = false;
+                         finished = true;
                      }
                  }
              }

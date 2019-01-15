@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class Othello extends Application {
     //general game information
     public static Board board = new Board();
-    public static Player white = new GreedyAlgorithm(1,1); //TreeSearch(1);//new MiniMaxOppModel(1);//
+    public static Player white = new GreedyAlgorithm(1,1); //new MiniMaxOppModel(1); //TreeSearch(1);//
     public static Player black = new GreedyAlgorithm(2,2);
     public static Player current = black;
     //window frame information
@@ -36,7 +36,7 @@ public class Othello extends Application {
     public int[] gameLoop(){
         //board = new Board();
         board.clearBoard();
-        white.reset();
+       // white.reset();
        /* black.getEvalFunction().setW1(6);
         black.getEvalFunction().setW2(2);
         black.getEvalFunction().setW3(3);

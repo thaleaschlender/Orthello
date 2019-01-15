@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 public class OpponentModel extends Player{
     //public Player opponent;
+
+    //Does the opponent model
     public EvaluationFunction1 e = new EvaluationFunction1(this);
     public int[] currentWeights = {1,1,1,1};
     public Board lastBoard;
