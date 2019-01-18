@@ -1,13 +1,44 @@
 public class EvaluationFunction1 implements EvaluationFunction {
     Player t;
-    int w1 = 1;
-    int w2 = 1;
-    int w3 = 1;
-    int w4 = 1;
+    int w1 = 13;
+    int w2 = 8;
+    int w3 = 3;
+    int w4 = 0;
     int[][] boardValues;
     StableDisks e;
     int player;
     int opponent;
+    public void setW5(int w1) {
+
+    }
+
+    public void setW6(int w2) {
+
+    }
+
+    public void setW7(int w3) {
+
+
+    }
+    public void setW8(int w4) {
+
+    }
+    public void setW9(int w1) {
+
+    }
+
+    public void setW10(int w2) {
+
+    }
+
+    public void setW11(int w3) {
+
+    }
+    public void setW12(int w4) {
+
+    }
+
+
     public EvaluationFunction1(Player t)
     {
         this.t = t;
@@ -70,7 +101,7 @@ public class EvaluationFunction1 implements EvaluationFunction {
 
     @Override
     public int evaluateBoard(Board board) {
-        return w1*dScore(board) + w2*dPosition(board) + w3*dMoves(board) + w4 * 0;//stableDiscs(board);
+        return w1*dScore(board) + w2*dPosition(board) + w3*dMoves(board) + w4 * stableDiscs(board);
 
     }
     public int dScore(Board board){
@@ -94,13 +125,12 @@ public class EvaluationFunction1 implements EvaluationFunction {
         return dPosition;
     }
     public int dMoves(Board board){
-        return t.numberOfpossibleMoves(board, opponent) - t.numberOfpossibleMoves(board, player);
+        int r = - t.numberOfpossibleMoves(board, player);
+        return r;
 
     }
     public int stableDiscs(Board board){
         return e.evaluateBoard(board);
-        // maybe this doesnt work because we have to change the colour for e too
-        //return 0;
     }
     public int getW1(){return w1;}
     public int getW2(){return w2;}

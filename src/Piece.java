@@ -37,4 +37,8 @@ public class Piece {
     public void setValid(boolean v){
         this.valid=v;
     }
+    public boolean hasPiece(){
+        if( colour == 1 || colour == 2){
+            return true; } else return false;
+    }
 }

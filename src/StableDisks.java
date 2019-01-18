@@ -24,12 +24,12 @@ public class StableDisks implements EvaluationFunction {
                 stable[x][y] = stable(board,x,y);
             }
         }
-        for(int i = 0; i < stable.length; i++){
+       /* for(int i = 0; i < stable.length; i++){
             for(int j = 0; j < stable[0].length; j++){
                 System.out.print(stable[i][j]);
             }
             System.out.println();
-        }
+        }*/
         boolean unchanged = false;
         while (!unchanged){
             unchanged = true;
@@ -225,19 +225,19 @@ public class StableDisks implements EvaluationFunction {
     public int evaluateBoard(Board board) {
         boolean[][] stableDisks = stableBoard(board);
         int evaluation = 0;
-        board.print();
-        System.out.println("_______");
+        //board.print();
+       // System.out.println("_______");
         for(int i = 0; i < stableDisks.length;i++){
             for(int j = 0; j < stableDisks[0].length; j++){
-                System.out.print(stableDisks[i][j]);
+                // System.out.print(stableDisks[i][j]);
                 if(stableDisks[i][j]) {
                     evaluation++;
                     //System.out.println(" x " + i + " y " + j);
                 }
             }
-            System.out.println();
+            // System.out.println();
         }
-        System.out.println("Evaluation " + evaluation);
+       // System.out.println("Evaluation " + evaluation);
         return evaluation;
     }
 
@@ -256,6 +256,46 @@ public class StableDisks implements EvaluationFunction {
 
     @Override
     public void setW4(int w4) {
+
+    }
+
+    @Override
+    public void setW5(int w1) {
+
+    }
+
+    @Override
+    public void setW6(int w2) {
+
+    }
+
+    @Override
+    public void setW7(int w3) {
+
+    }
+
+    @Override
+    public void setW8(int w4) {
+
+    }
+
+    @Override
+    public void setW9(int w1) {
+
+    }
+
+    @Override
+    public void setW10(int w2) {
+
+    }
+
+    @Override
+    public void setW11(int w3) {
+
+    }
+
+    @Override
+    public void setW12(int w4) {
 
     }
 

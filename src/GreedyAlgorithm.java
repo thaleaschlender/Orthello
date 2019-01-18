@@ -9,19 +9,19 @@ public class GreedyAlgorithm extends Player {
         super(c);
         //this.oppMod = oppMod;
         if(eval == 1) {
-            e = new EvaluationFunction1(this);
+            e = new EvaluationFunction2(this);
         }
-        else e = new StableDisks(this);
-        int max = 20;
+        else e = new EvaluationFunction1(this);
+       int max = 20;
         int a = (int)(Math.random() * max);
         int b = (int)(Math.random() * max);
         int f = (int)(Math.random() * max);
         int d = (int)(Math.random() * max);
         System.out.println("weights "+a+" "+b+" "+f+" "+d);
-        e.setW1(a);
-        e.setW2(b);
-        e.setW3(f);
-        e.setW4(d);
+        e.setW1(1);
+        e.setW2(1);
+        e.setW3(1);
+        e.setW4(1);
     }
     public EvaluationFunction getEvalFunction(){
         return e;
@@ -36,7 +36,7 @@ public class GreedyAlgorithm extends Player {
         Node node = greedyPlayer(initState);
         //get the x and y coordinates on piece we actually want to place, and place it on the board
         Piece piece = node.getFirstPiece();
-        if(colour == 2) System.out.println("eval " + node.getCost());
+        //if(colour == 2) System.out.println("eval " + node.getCost());
         //System.out.println("TAKEN x: " + piece.getX()+" y: "+piece.getY());
         game.makeMove(piece.getX(),piece.getY());
       //  if(oppMod) opponentModell.setLastBoard(new Board(game.board));

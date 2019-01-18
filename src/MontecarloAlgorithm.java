@@ -74,14 +74,10 @@ that such a move is the best in this situation.
                 }
             }
         }
-       // System.out.println("__");
-       // for(Piece p : possibleMoves) System.out.println(" piece x: " + p.getX() + " y: " + p.getY() + " eval " + rox.getValue(p.getX(),p.getY()));
-        //System.out.println(" poss size " + possibleMoves.size());
         int delete = possibleMoves.size()/ 5; // 20%
         for(int i = 0; i < delete; i++){
             possibleMoves.remove(i);
         }
-        //System.out.println(" poss size after delete " + possibleMoves.size());
         return possibleMoves;
     }
 
@@ -96,13 +92,16 @@ move.
         Board board = new Board (initBoard);
         board = makeMove(p.getX(),p.getY(),board,colour);
         int current = switchplayer(colour);
-        while(!gameOver(board, switchplayer(current))) {
+        while(isGameover(board, switchplayer(current))==0) {
             current = switchplayer(current);
             ArrayList<Piece> posMoves = possibleMoves(board, current);
             int random = (int) (Math.random() * (posMoves.size()));
             board = makeMove(posMoves.get(random).getX(), posMoves.get(random).getY(), board, current);
-
         }
+        if(isGameover(board,switchplayer(current))==1){
+            return switchplayer(current);
+        }
+        else
         return board.getWinner();
         }
     public int switchplayer(int current){
@@ -111,10 +110,15 @@ move.
         return current;
     }
 
-    public boolean gameOver(Board board, int current){
-        if(board.gameOver()) return true;
-        else if(possibleMoves(board, current).size()== 0)return true;
-        return false;
+    public int isGameover(Board board, int current){
+        boolean gameover = true;
+        for(int i = 0; i < board.getBoard().length; i++)
+            for(int j = 0; j < board.getBoard()[0].length; j++)
+                if(board.getBoard()[i][j].getColour() == 0) gameover= false;
+
+        if(gameover) return 2; // GAME OVER DUE TO FULL BOARD
+        else if(possibleMoves(board,current).size()== 0) return 1; // GAME OVER DUE TO PLAYER FAIL
+        return 0; // NOT GAME OVER
     }
 
 
