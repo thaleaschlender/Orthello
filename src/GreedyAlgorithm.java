@@ -2,10 +2,26 @@ import java.util.ArrayList;
 
 public class GreedyAlgorithm extends Player {
     EvaluationFunction e;
+
+    //OpponentModel opponentModell = new OpponentModel(colour);
+    //boolean oppMod;
     public GreedyAlgorithm(int c, int eval){
         super(c);
-        if(eval == 1) e = new EvaluationFunction1(this);
-        else e = new Roxanne(this);
+        //this.oppMod = oppMod;
+        if(eval == 1) {
+            e = new EvaluationFunction2(this);
+        }
+        else e = new EvaluationFunction1(this);
+       int max = 20;
+        int a = (int)(Math.random() * max);
+        int b = (int)(Math.random() * max);
+        int f = (int)(Math.random() * max);
+        int d = (int)(Math.random() * max);
+        System.out.println("weights "+a+" "+b+" "+f+" "+d);
+        e.setW1(1);
+        e.setW2(1);
+        e.setW3(1);
+        e.setW4(1);
     }
     public EvaluationFunction getEvalFunction(){
         return e;
@@ -13,20 +29,31 @@ public class GreedyAlgorithm extends Player {
     @Override
     public void play (int x, int y){
         // root or initial state (this is, what the board looks like before we've made our move)
+        //if(oppMod) opponentModell.learnWeights();
         Node initState = new Node(new Board(game.board), null, null);
         initState.setPlayer(checkfor);
         initState.setTreeSearch(this);
         Node node = greedyPlayer(initState);
         //get the x and y coordinates on piece we actually want to place, and place it on the board
         Piece piece = node.getFirstPiece();
+        //if(colour == 2) System.out.println("eval " + node.getCost());
+        //System.out.println("TAKEN x: " + piece.getX()+" y: "+piece.getY());
         game.makeMove(piece.getX(),piece.getY());
+      //  if(oppMod) opponentModell.setLastBoard(new Board(game.board));
         game.updateBoard();
+
     }
 
     public Node greedyPlayer(Node initialState){
             Node bestNode = null;
             ArrayList<Node> successors = expand(initialState);
-                for(Node n : successors) bestNode = compareMax(bestNode,n);
+                for(Node n : successors){
+                  /*  System.out.println("x: "+n.getFirstPiece().getX()+ " y: "+n.getFirstPiece().getY()
+                    +" x1 "+e.dScore(n.getBoard())+" x2 "+e.dPosition(n.getBoard())
+                            +" x3 "+e.dMoves(n.getBoard())+" x4 "+e.stableDiscs(n.getBoard())+
+                            " with cost " + n.getCost());*/
+                    bestNode = compareMax(bestNode,n);
+                }
            return bestNode;
         }
     public ArrayList<Node> expand (Node node){

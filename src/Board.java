@@ -58,7 +58,7 @@ public class Board {
         }
         if(w > b) return 1;
         else if ( b > w) return 2;
-        else if (b == w ) return -1;
+       // else if (b == w ) return -1;
         else return 0;
     }
     public int printScore(int p){

@@ -9,14 +9,14 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-import javafx.scene.text.Text;
 import java.util.ArrayList;
 //direction x is vertical, direction y horizontal
 public class Othello extends Application {
-    //general game information
+    //TODO: THE GAME IS ALWAYS THE SAME THUS OPPMOD & EXPERIMENTS NOT POSSIBLE
+    //did it work before because stable discs was not stable?
     public static Board board = new Board();
-    public static Player white = new AlphaBeta(1);
-    public static Player black = new GreedyAlgorithm(2,2);
+    public static Player white = new GreedyAlgorithm(1,1);//TreeSearch(1);//MiniMaxOppModel(1); //new MontecarloAlgorithm(1,false);//new MiniMaxOppModel(1); //
+    public static Player black = new GreedyAlgorithm(2,2);//new GreedyAlgorithm(2,2);//
     public static Player current = black;
     //window frame information
     private static final int TILE_SIZE = 60;
@@ -32,32 +32,62 @@ public class Othello extends Application {
     public int winner = 0;
 
     private static Tile[][] boardUi = new Tile[HEIGHT][WIDTH];
-
+    public void switchToRandom(){
+        black = new Random(2);
+    }
     public int[] gameLoop(){
         //board = new Board();
         board.clearBoard();
-        while(!isGameover()){
+       // white.reset();
+       /* black.getEvalFunction().setW1(6);
+        black.getEvalFunction().setW2(2);
+        black.getEvalFunction().setW3(3);
+        black.getEvalFunction().setW4(4);*/
+        while(isGameover()==0){
             current.play(0, 0);
             hbox.getChildren().clear();
             updateScore();
         }
-        return board.returnScores();
+        int[] result = new int[2];
+        if(isGameover()==2) return board.returnScores();
+        else{
+            if(current == white){
+                result[0] = 1;
+                result[1] = 0;
+            }
+            else{
+                result[0] = 0;
+                result[1] = 1;
+            }
+            return result;
+        }
+
+
     }
     public void turn (int x, int y){
-        //black.getEvalFunction().setW1(96);
-        //black.getEvalFunction().setW2(-14);
-        //black.getEvalFunction().setW3(-15);
-        if(!isGameover()){
+
+        if(isGameover()==0){
             current.play(x, y);
+
             hbox.getChildren().clear();
             updateScore();
         }
-        else gameOverScreen();
+        else {
+            System.out.println(isGameover());
+            board.clearBoard();
+
+            //gameOverScreen();
+        }
     }
-    public boolean isGameover(){
-        if(board.gameOver()) return true;
-        else if(possibleMoves().size()== 0)return true;
-        return false;
+    public int isGameover(){
+        boolean gameover = true;
+        for(int i = 0; i < board.getBoard().length; i++)
+            for(int j = 0; j < board.getBoard()[0].length; j++)
+                if(board.getBoard()[i][j].getColour() == 0) gameover= false;
+
+        if(gameover) return 2; // GAME OVER DUE TO FULL BOARD
+        else if(possibleMoves().size()== 0) return 1; // GAME OVER DUE TO PLAYER FAIL
+        return 0; // NOT GAME OVER
     }
 
     public void run(){

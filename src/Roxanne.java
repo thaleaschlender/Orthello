@@ -105,6 +105,52 @@ public class Roxanne implements EvaluationFunction {
     public void setW3(int w3) {
 
     }
+
+    @Override
+    public void setW4(int w4) {
+
+    }
+
+    @Override
+    public void setW5(int w1) {
+
+    }
+
+    @Override
+    public void setW6(int w2) {
+
+    }
+
+    @Override
+    public void setW7(int w3) {
+
+    }
+
+    @Override
+    public void setW8(int w4) {
+
+    }
+
+    @Override
+    public void setW9(int w1) {
+
+    }
+
+    @Override
+    public void setW10(int w2) {
+
+    }
+
+    @Override
+    public void setW11(int w3) {
+
+    }
+
+    @Override
+    public void setW12(int w4) {
+
+    }
+
     @Override
     public int getW1() {
         return 0;
@@ -115,6 +161,11 @@ public class Roxanne implements EvaluationFunction {
     }
     @Override
     public int getW3() {
+        return 0;
+    }
+
+    @Override
+    public int getW4() {
         return 0;
     }
 }
